@@ -35,8 +35,8 @@ require([
     },
 
     initialize: function(){
-      this.headerView = new HeaderView({el: $('.header')});
-      this.headerView.render();
+      this.headerView = new HeaderView({el: $('.header')});/*auto-renders*/
+      //this.headerView.render();
       //this.mainView = new MainView()
     },
 
@@ -60,5 +60,24 @@ require([
 
   var router = new Router();
   Backbone.history.start();
+
+  // wardrobeMe.kickstart = _.after(_.size(wardrobeMe.views), _.once( function(){
+  //     wardrobeMe.router = new AppRouter();
+  //     Backbone.history.start();
+  //     //console.log('kickstarted');
+  // }));
+
+// //Load Templates
+// _.each(wardrobeMe.views, function(classDef, className, list){
+//     $.get('tpl/' + className + '.html', function(data) {
+//         classDef.prototype.template = _.template(data);
+//         //console.log('kickstart attempted');
+//         wardrobeMe.kickstart();
+//     }).fail(function() {
+//         //increment the load counter
+//         console.log('could not load '+className);
+//         wardrobeMe.kickstart();
+//     });
+// }); 
  
 });

@@ -22,25 +22,36 @@ require.config({
   }
 });
 
-require([
-    'jquery',
-    'backbone',
-    //'models/Todo',
-    'views/Header'
-  ], function($, Backbone, /*Todo,*/ HeaderView ) {
+require([ 'jquery', 'backbone', 'views/Header', 'views/Home', 'views/List', 'views/About' /*, 'views/Main'*/],
+  function($, Backbone, HeaderView, HomeView, ListView, AboutView/*, MainView*/ ) {
 
   var Router = Backbone.Router.extend({
     routes: {
-      "": "main"
+      // "": "main",
+      '': 'home',
+      'list': 'list',
+      'about': 'about'
     },
 
     initialize: function(){
-      this.headerView = new HeaderView({el: $('.header')});/*auto-renders*/
-      //this.headerView.render();
-      //this.mainView = new MainView()
+      var that = this;
+      that.headerView = new HeaderView({el: $('.header'), loadTemplate:true});
+      //that.mainView = new MainView({el: $('.container')});
+      that.homeView = new HomeView({el: $('.container')});
+      that.aboutView = new AboutView({el: $('.container')});
+      that.listView = new ListView({el: $('.container')});
     },
 
-    main: function(){
+    // main: function(){
+    //   this.mainView.$el.show();
+    // },
+
+    home: function(){
+      this.homeView.render();
+    },
+
+    list: function(){
+      this.listView.render();
       //var tasks = new Todo.Collection();
       //var view = new MasterView({collection: tasks});
       // tasks.fetch({
@@ -52,6 +63,11 @@ require([
       //     alert(error);
       //   }
       // });
+    },
+
+
+    about: function(){
+      this.aboutView.render();
     }
   });
 
@@ -60,24 +76,5 @@ require([
 
   var router = new Router();
   Backbone.history.start();
-
-  // wardrobeMe.kickstart = _.after(_.size(wardrobeMe.views), _.once( function(){
-  //     wardrobeMe.router = new AppRouter();
-  //     Backbone.history.start();
-  //     //console.log('kickstarted');
-  // }));
-
-// //Load Templates
-// _.each(wardrobeMe.views, function(classDef, className, list){
-//     $.get('tpl/' + className + '.html', function(data) {
-//         classDef.prototype.template = _.template(data);
-//         //console.log('kickstart attempted');
-//         wardrobeMe.kickstart();
-//     }).fail(function() {
-//         //increment the load counter
-//         console.log('could not load '+className);
-//         wardrobeMe.kickstart();
-//     });
-// }); 
  
 });

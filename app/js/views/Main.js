@@ -1,31 +1,30 @@
-define([
-    'backbone',
-    'views/Header'
-    // 'views/TaskList',
-    // 'views/NewTask',
-    // 'views/MarkAll',
-    // 'views/FooterView'
-  ], function(Backbone, HeaderView /*TaskList, NewTask, MarkAll, FooterView*/) {
+define(['backbone', 'views/Home', 'helpers/PubSub'],
+  function(Backbone, HomeView, PubSub) {
+
   var View = Backbone.View.extend({
-    className: 'masterView',
+
+    className: 'mainView',
+
     initialize: function(){
-      this.children = {
-        // taskList: new TaskList({collection: this.collection}),
-        // newTask: new NewTask({collection: this.collection}),
-        // markAll: new MarkAll({collection: this.collection}),
-        // footerView: new FooterView({collection: this.collection})
+      var that = this;
+      that.children = {
+        //homeView: new HomeView()
       };
-      this.$el.hide();
-      this.$el.append()
-      // this.$el.append(this.children.newTask.render().el);
-      // this.$el.append(this.children.markAll.render().el);
-      // this.$el.append(this.children.taskList.render().el);
-      // this.$el.append(this.children.footerView.render().el);
+
+      that.$el.hide();
+
+      // that.children.homeView.sub("ready", function(){
+      //   that.$el.append(that.children.homeView.render().el);
+      // });
+
+      that.pub("ready", 'MainView finished initialize')
     },
+
     render: function(){
       this.$el.show();
       return this;
     }
   });
-  return View;
+
+  return View.extend(PubSub);
 });

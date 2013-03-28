@@ -1,34 +1,61 @@
-define(['jquery', 'backbone'],
-    function($, Backbone){
+define(['jquery', 'backbone', 'underscore', 'helpers/PubSub'],
+    function($, Backbone, _, PubSub){
+
     var BaseView = Backbone.View.extend({
-        initialize: function(args){
-            var template = this.getTemplate(function(){
-                if(args && args.autoRender === false) {} else this.render();
-            });
+
+        ready: false,
+
+        initialize: function(args){ /*auto-load disabled*/
+            if(args && typeof args.loadTemplate !== undefined && args.loadTemplate === true) {
+                this.render();
+                // console.log('loadTemplate=true for: '+this.getInstanceId());
+            } else {
+                // console.log('loadTemplate=false for: '+this.getInstanceId());
+            }
         },
+
         render: function (eventName) {
-            $(this.el).html(this.template());
-            //this.$el.html(this.template());
-            
-            return this;
+            var that = this,
+                renderCallback = function(){
+                    $(that.el).html(that.template());
+                    console.log('rendered template for: '+that.getInstanceId());
+                };
+
+            if(!that.template)
+                that.getTemplate(renderCallback);
+            else
+                renderCallback.call(that);
+
+            return that;
         },
+
         putAway: function(){
             this.el;
         },
+
         getTemplate: function(callback){
+            callback = (typeof callback === 'function')? callback: function(){};
             var that = this;
             if(!that.template){
                 require(['text!/tpl/'+that.getClassName()+'.html'], function(tpl){
                     that.template = _.template(tpl);
-                    console.log('Loaded template for: '+that.className);
+                    if(!that.ready){
+                        ready = true;
+                        that.pub('ready', that.getClassName());
+                    }
                     callback.call(that);
                 })
             }
         },
+
         getClassName: function(){
             return this.className || 'Base';
+        },
+
+        getInstanceId: function(){
+            return this.getClassName()+' ('+this.getUniqueId()+')'
         }
     });
 
-    return BaseView;
+    return BaseView.extend(PubSub);
 });

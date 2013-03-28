@@ -1,9 +1,10 @@
 define([
 	'backbone',
 	'./Model',
+	'./views/all',
 	'backbone.subroute'
 	],
-function(Backbone, ContractsModels){
+function(Backbone, Contracts, ContractViews){
 	
 	var ContractRouter = Backbone.SubRoute.extend({
 		routes: {
@@ -13,6 +14,13 @@ function(Backbone, ContractsModels){
 			//'product'	:'productPage',
 			'detatils'	:'detailsPage'//,
 			//'customer'	:'customerPage'
+		},
+
+		initialize: function(){
+			var that = this;
+			that.contract = new Contracts.Model();
+			//that.contractView = new ContractViews.Detatil();
+			that.contractList = new Contracts.Collection();
 		},
 
 		rootPage: function(){
@@ -37,12 +45,14 @@ function(Backbone, ContractsModels){
 		//productPage	:function(){},
 
 		detailsPage: function(id){
-			console.log('contracts details');          
-			// this.contract.set({_id: id});
+			var that = this;
 
-			// this.contract.fetch({success: function(){
-			// 	this.contractView.render();
-			// }});
+			console.log('contracts details');          
+			that.contract.set({_id: id});
+
+			that.contract.fetch({success: function(){
+				that.contractView.render();
+			}});
 		}//,
 
 		//customerPage:function(){}

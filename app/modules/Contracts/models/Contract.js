@@ -9,7 +9,10 @@ define([
 ],
 function(Backbone){
 
+	var store = new Backbone.LocalStorage(window.store || "Contracts"); //for testing
+
 	var Contract = Backbone.Model.extend({
+		localStorage: store,
 		defaults: {
 			vin: '',
 			timestamp: 0,
@@ -23,7 +26,7 @@ function(Backbone){
 	});
 
 	var Contracts = Backbone.Collection.extend({
-		localStorage: new Backbone.LocalStorage(window.store || "Contracts"),
+		localStorage: store,
 		Model: Contract,
 		completed: function(){
 			return this.where({completed: true});

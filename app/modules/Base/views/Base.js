@@ -27,22 +27,38 @@ function($, Backbone, _, Guid){
                 };
 
             if(!that.template)
-                that.getTemplate(renderCallback);
+                that._getTemplate(renderCallback);
             else
                 renderCallback.call(that);
 
             return that;
         },
 
-        putAway: function(){
-            this.el;
+        _relativeRequire: null,
+
+        _baseRelativeRequire: function(dependency, callback){
+            if(_.isFunction(this._relativeRequire))
+                this._relativeRequire(dependency, callback);
+            else
+                require(dependency, callback);
+
         },
 
-        getTemplate: function(callback){
+        _templatePath: null,
+
+        _getTemplatePath: function(){
+            if(!this._templatePath)
+                this._templatePath = '/tpl/';
+
+            console.log('Template Path ('+this._templatePath+') for: '+this.getClassName());
+            return this._templatePath;
+        },
+
+        _getTemplate: function(callback){
             callback = (typeof callback === 'function')? callback: function(){};
             var that = this;
             if(!that.template){
-                require(['text!/tpl/'+that.getClassName()+'.html'], function(tpl){
+                that._baseRelativeRequire(['text!'+that._getTemplatePath()+that.getClassName()+'.html'], function(tpl){
                     that.template = _.template(tpl);
                     if(!that.ready){
                         ready = true;

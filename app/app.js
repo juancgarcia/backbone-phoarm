@@ -8,21 +8,22 @@ define([
 	'views/Home',
 	'views/List',
 	'views/About',
+	'views/Main',
 	'modules/Contracts/Main' /*,
 	'backbone.subroute'*/
 
 	// Library extensions
 ],
-function($, Backbone, HeaderView, HomeView, ListView, AboutView, ContractsModule/*, Subroute*/) {
+function($, Backbone, HeaderView, HomeView, ListView, AboutView, MainView, ContractsModule/*, Subroute*/) {
 
 	var Routers = {},
 		AppRouter = Backbone.Router.extend({
 		routes: {
-			// "": "main",
 			'': 'home',
 			'list': 'list',
 			'about': 'about',
-			'contracts/*subroute': 'invokeContractsModule'
+			'contracts/*subroute': 'invokeContractsModule',
+			'main': 'main'
 		},
 
 		initialize: function(){
@@ -40,7 +41,7 @@ function($, Backbone, HeaderView, HomeView, ListView, AboutView, ContractsModule
 
 		invokeContractsModule: function(subroute){
 			if(!Routers.Contracts){
-				Routers.Contracts = new ContractsModule.Router("contracts");
+				Routers.Contracts = new ContractsModule.Router("contracts", {createTrailingSlashRoutes: true});
 			}
 		},
 

@@ -1,5 +1,6 @@
 define([
 	// Libraries
+	'jquery',
 	'backbone',
 
 	// Modules
@@ -9,7 +10,7 @@ define([
 	// Library extensions
 	'backbone.subroute'
 ],
-function(Backbone, Contracts, ContractViews){
+function($, Backbone, Contracts, ContractViews){
 	
 	var ContractRouter = Backbone.SubRoute.extend({
 		routes: {
@@ -26,6 +27,11 @@ function(Backbone, Contracts, ContractViews){
 			that.contract = new Contracts.Model();
 			//that.contractView = new ContractViews.Detatil();
 			that.contractList = new Contracts.Collection();
+			that.contractList.create({title: 'first'});
+			that.contractList.create({title: 'second'});
+			that.contractList.create({title: 'third'});
+
+			that.contractListView = new ContractViews.List({collection: that.contractList});
 		},
 
 		rootPage: function(){
@@ -42,9 +48,15 @@ function(Backbone, Contracts, ContractViews){
 			// var p = page ? parseInt(page, 10) : 1;
 			var that = this;
 
-			// this.contractList.fetch({success: function(){
-			// 	that.contractListView.render();
-			// }});
+			this.contractList.fetch({
+				success: function(contracts){
+					$('.container').html(that.contractListView.render().el).show();
+				//that.contractListView.render();
+				},
+				error: function(model, error){
+					alert(error);
+				}
+			});
 		},
 
 		//productPage	:function(){},
@@ -53,11 +65,11 @@ function(Backbone, Contracts, ContractViews){
 			var that = this;
 
 			console.log('contracts details');          
-			that.contract.set({_id: id});
+			// that.contract.set({_id: id});
 
-			that.contract.fetch({success: function(){
-				that.contractView.render();
-			}});
+			// that.contract.fetch({success: function(){
+			// 	that.contractView.render();
+			// }});
 		}//,
 
 		//customerPage:function(){}

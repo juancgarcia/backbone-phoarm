@@ -1,5 +1,10 @@
 define([
+	// Libraries
+
+	// Modules
 	'./Detail'
+
+	// Library extensions
 ],
 function(DetailView){
 	var Views = {};

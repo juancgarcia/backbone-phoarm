@@ -1,12 +1,17 @@
-require([
+define([
+	// Libraries
 	'jquery',
 	'backbone',
+
+	// Modules
 	'views/Header',
 	'views/Home',
 	'views/List',
 	'views/About',
 	'modules/Contracts/Main' /*,
 	'backbone.subroute'*/
+
+	// Library extensions
 ],
 function($, Backbone, HeaderView, HomeView, ListView, AboutView, ContractsModule/*, Subroute*/) {
 

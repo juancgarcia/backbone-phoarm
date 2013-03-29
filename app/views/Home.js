@@ -1,7 +1,16 @@
-define(['jquery', 'backbone', 'views/Base'],
-	function($, Backbone, BaseView){
+define([
+	// Libraries
+	'jquery',
+	'backbone',
 
-	var HomeView = BaseView.extend({
+	// Modules
+	'modules/Base/Main'
+
+	// Library extensions
+],
+function($, Backbone, BaseModule){
+
+	var HomeView = BaseModule.Views.Base.extend({
 		className: 'Home'
 	});
 

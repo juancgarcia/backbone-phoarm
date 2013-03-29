@@ -1,7 +1,15 @@
-define(['jquery', 'backbone', 'views/Base'],
-	function($, Backbone, BaseView){
+define([
+	// Libraries
+	'backbone',
 
-	var DetailView = BaseView.extend({
+	// Modules
+	'modules/Base/Main'
+
+	// Library extensions
+],
+function(Backbone, BaseModule){
+
+	var DetailView = BaseModule.Views.Base.extend({
 		
 		className: 'ContractDetail'
 	    

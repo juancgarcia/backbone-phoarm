@@ -1,9 +1,14 @@
 define([
+	// Libraries
 	'backbone',
-	'./models/Contract',
-	'./views/all',
+
+	// Modules
+	'../models/Contract',
+	'../views/all',
+
+	// Library extensions
 	'backbone.subroute'
-	],
+],
 function(Backbone, Contracts, ContractViews){
 	
 	var ContractRouter = Backbone.SubRoute.extend({

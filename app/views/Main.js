@@ -1,5 +1,14 @@
-define(['backbone', 'views/Home', 'helpers/PubSub'],
-  function(Backbone, HomeView, PubSub) {
+define([
+  // Libraries
+  'backbone',
+
+  // Modules
+  'views/Home',
+  'helpers/PubSub'
+
+  // Library extensions
+],
+function(Backbone, HomeView, PubSub) {
 
   var View = Backbone.View.extend({
 

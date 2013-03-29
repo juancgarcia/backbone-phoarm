@@ -4,11 +4,11 @@ define([
 
   // Modules
   'views/Home',
-  'helpers/PubSub'
+  'helpers/Guid'
 
   // Library extensions
 ],
-function(Backbone, HomeView, PubSub) {
+function(Backbone, HomeView, Guid) {
 
   var View = Backbone.View.extend({
 
@@ -22,11 +22,11 @@ function(Backbone, HomeView, PubSub) {
 
       that.$el.hide();
 
-      // that.children.homeView.sub("ready", function(){
+      // that.children.homeView.on('ready', function(){
       //   that.$el.append(that.children.homeView.render().el);
       // });
 
-      that.pub("ready", 'MainView finished initialize')
+      // that.trigger('ready');
     },
 
     render: function(){
@@ -35,5 +35,5 @@ function(Backbone, HomeView, PubSub) {
     }
   });
 
-  return View.extend(PubSub);
+  return View.extend(Guid);
 });

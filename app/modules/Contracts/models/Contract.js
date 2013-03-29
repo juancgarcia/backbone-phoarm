@@ -1,4 +1,12 @@
-define(['backbone', 'backbone.localStorage'],
+define([
+	// Libraries
+	'backbone',
+
+	// Modules
+
+	// Library Extensions
+	'backbone.localStorage'
+],
 function(Backbone){
 
 	var Contract = Backbone.Model.extend({

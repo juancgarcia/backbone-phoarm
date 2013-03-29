@@ -1,5 +1,10 @@
-define(['jquery', 'backbone', 'underscore', 'helpers/PubSub'],
-    function($, Backbone, _, PubSub){
+define([
+    'jquery',
+    'backbone',
+    'underscore',
+    'helpers/Guid'
+],
+function($, Backbone, _, Guid){
 
     var BaseView = Backbone.View.extend({
 
@@ -41,7 +46,7 @@ define(['jquery', 'backbone', 'underscore', 'helpers/PubSub'],
                     that.template = _.template(tpl);
                     if(!that.ready){
                         ready = true;
-                        that.pub('ready', that.getClassName());
+                        that.trigger('ready');
                     }
                     callback.call(that);
                 })
@@ -57,5 +62,5 @@ define(['jquery', 'backbone', 'underscore', 'helpers/PubSub'],
         }
     });
 
-    return BaseView.extend(PubSub);
+    return BaseView.extend(Guid);
 });

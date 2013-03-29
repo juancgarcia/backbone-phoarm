@@ -1,6 +1,6 @@
 define([
 	'backbone',
-	'./Model',
+	'./models/Contract',
 	'./views/all',
 	'backbone.subroute'
 	],

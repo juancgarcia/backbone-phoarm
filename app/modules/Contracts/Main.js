@@ -1,6 +1,6 @@
 define([
-	'./Router',
-	'./Model'
+	'./routers/Main',
+	'./models/Contract'
 ],
 
 function(ContractRouter, ContractModel){

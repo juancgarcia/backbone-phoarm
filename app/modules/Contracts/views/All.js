@@ -2,15 +2,17 @@ define([
 	// Libraries
 
 	// Modules
+	'./ContractSearch',
 	'./Detail',
 	'./ContractList',
 	'./ContractListItem'
 
 	// Library extensions
 ],
-function(DetailView, ContractListView, ContractListItemView){
+function(SearchView, DetailView, ContractListView, ContractListItemView){
 	var Views = {};
 
+	Views.Search = SearchView;
 	Views.Detail = DetailView;
 	Views.List = ContractListView;
 	Views.ListItem = ContractListItemView;

@@ -27,6 +27,7 @@ function($, Backbone, Contracts, ContractViews){
 			that.containerSelector = options.containerSelector || '.contractModuleContainer';
 			that.contract = new Contracts.Model();
 			//that.contractView = new ContractViews.Detatil();
+			that.contractSearch = new ContractViews.Search();
 
 			that.contractList = new Contracts.Collection();
 
@@ -39,6 +40,10 @@ function($, Backbone, Contracts, ContractViews){
 
 		searchPage: function(){
 			console.log('contracts search');
+
+			var that = this;
+
+			$(that.containerSelector).html(that.contractSearch.render().el).show();
 		},
 
 		list: function(page){

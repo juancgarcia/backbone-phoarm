@@ -28,11 +28,12 @@ function($, Backbone, HeaderView, HomeView, ListView, AboutView, MainView, Contr
 
 		initialize: function(){
 			var that = this;
+			that.containerSelector = '.appContainer';
 			that.headerView = new HeaderView({el: $('.header'), loadTemplate:true});
 			//that.mainView = new MainView({el: $('.container')});
-			that.homeView = new HomeView({el: $('.container')});
-			that.aboutView = new AboutView({el: $('.container')});
-			that.listView = new ListView({el: $('.container')});
+			that.homeView = new HomeView({el: $(that.containerSelector)});
+			that.aboutView = new AboutView({el: $(that.containerSelector)});
+			that.listView = new ListView({el: $(that.containerSelector)});
 		},
 
 		// main: function(){
@@ -40,8 +41,12 @@ function($, Backbone, HeaderView, HomeView, ListView, AboutView, MainView, Contr
 		// },
 
 		invokeContractsModule: function(subroute){
+			var that = this;
 			if(!Routers.Contracts){
-				Routers.Contracts = new ContractsModule.Router("contracts", {createTrailingSlashRoutes: true});
+				Routers.Contracts = new ContractsModule.Router("contracts", {
+					createTrailingSlashRoutes: true,
+					containerSelector: that.containerSelector
+				});
 			}
 		},
 

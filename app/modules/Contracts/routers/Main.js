@@ -22,8 +22,9 @@ function($, Backbone, Contracts, ContractViews){
 			//'customer'	:'customerPage'
 		},
 
-		initialize: function(){
+		initialize: function(options){
 			var that = this;
+			that.containerSelector = options.containerSelector || '.contractModuleContainer';
 			that.contract = new Contracts.Model();
 			//that.contractView = new ContractViews.Detatil();
 
@@ -48,7 +49,7 @@ function($, Backbone, Contracts, ContractViews){
 
 			this.contractList.fetch({
 				success: function(contracts, response, options){
-					$('.container').html(that.contractListView.render().el).show();
+					$(that.containerSelector).html(that.contractListView.render().el).show();
 				//that.contractListView.render();
 				},
 				error: function(contracts, response, options){

@@ -49,12 +49,14 @@ function($, Backbone, Contracts, ContractViews){
 			var that = this;
 
 			this.contractList.fetch({
-				success: function(contracts){
+				success: function(contracts, response, options){
 					$('.container').html(that.contractListView.render().el).show();
 				//that.contractListView.render();
 				},
-				error: function(model, error){
-					alert(error);
+				error: function(contracts, response, options){
+					console.log('Err-Contracts: '+JSON.stringify(contracts));
+					console.log('Err-Response: '+JSON.stringify(response));
+					console.log('Err-Options: '+JSON.stringify(options));
 				}
 			});
 		},

@@ -22,7 +22,8 @@ function($, Backbone, _, Guid){
         render: function (eventName) {
             var that = this,
                 renderCallback = function(){
-                    $(that.el).html(that.template());
+                    var data = (that.model)? that.model.toJSON(): {};
+                    $(that.el).html(that.template(data));
                     console.log('rendered template for: '+that.getInstanceId());
                 };
 

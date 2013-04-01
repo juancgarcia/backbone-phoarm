@@ -5,14 +5,11 @@ define([
 	// Modules
 
 	// Library Extensions
-	'backbone.localStorage'
+	// 'backbone.localStorage'
 ],
 function(Backbone){
 
-	var store = new Backbone.LocalStorage(window.store || "Contracts"); //for testing
-
 	var Contract = Backbone.Model.extend({
-		localStorage: store,
 		defaults: {
 			vin: '',
 			timestamp: 0,
@@ -26,7 +23,10 @@ function(Backbone){
 	});
 
 	var Contracts = Backbone.Collection.extend({
-		localStorage: store,
+		defaults: {
+			model: Contract
+		},
+		url: '/data/contracts.json',
 		Model: Contract,
 		completed: function(){
 			return this.where({completed: true});

@@ -5,7 +5,7 @@ define([
 	'backbone',
 
 	// Modules
-	'./Detail',
+	'./ContractListItem',
 	'modules/Base/Main'
 
 	// Library extensions

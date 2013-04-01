@@ -26,10 +26,8 @@ function($, Backbone, Contracts, ContractViews){
 			var that = this;
 			that.contract = new Contracts.Model();
 			//that.contractView = new ContractViews.Detatil();
+
 			that.contractList = new Contracts.Collection();
-			that.contractList.create({title: 'first'});
-			that.contractList.create({title: 'second'});
-			that.contractList.create({title: 'third'});
 
 			that.contractListView = new ContractViews.List({collection: that.contractList});
 		},

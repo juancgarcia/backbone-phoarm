@@ -3,15 +3,18 @@ define([
 
 	// Modules
 	'./routers/Main',
-	'./models/Contract'
+	'./models/all',
+	'./views/all'
 
 	// Library extensions
 ],
-function(ContractRouter, ContractModel){
+function(ContractRouter, ContractModels, ContractViews){
 	
-	var ContractModule = ContractModel;
+	var ContractModule = {};
 
+	ContractModule.Models = ContractModels;
 	ContractModule.Router = ContractRouter;
+	ContractModule.Views = ContractViews;
 
 	return ContractModule;
 });

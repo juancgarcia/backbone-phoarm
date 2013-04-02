@@ -2,6 +2,7 @@ define([
 	// Libraries
 
 	// Modules
+	'./Master',
 	'./ContractSearch',
 	'./Detail',
 	'./ContractList',
@@ -9,9 +10,10 @@ define([
 
 	// Library extensions
 ],
-function(SearchView, DetailView, ContractListView, ContractListItemView){
+function(MasterView, SearchView, DetailView, ContractListView, ContractListItemView){
 	var Views = {};
 
+	Views.Master = MasterView;
 	Views.Search = SearchView;
 	Views.Detail = DetailView;
 	Views.List = ContractListView;

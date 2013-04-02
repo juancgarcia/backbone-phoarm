@@ -25,6 +25,7 @@ function($, Backbone, _, Guid){
                     var data = (that.model)? that.model.toJSON(): {};
                     $(that.el).html(that.template(data));
                     console.log('rendered template for: '+that.getInstanceId());
+                    that.trigger('rendered');
                 };
 
             if(!that.template)

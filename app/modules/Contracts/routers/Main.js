@@ -14,12 +14,12 @@ function($, Backbone, Contracts, ContractViews){
 	
 	var ContractRouter = Backbone.SubRoute.extend({
 		routes: {
-			'/'			:'rootPage',
 			''			:'rootPage',
 			'search'	:'searchPage',
 			'list'		:'list',
 			//'product'	:'productPage',
-			'detatils'	:'detailsPage'//,
+			'details/:id'	:'detailsPage',
+			'*other'	:'rootPage'
 			//'customer'	:'customerPage'
 		},
 
@@ -30,11 +30,11 @@ function($, Backbone, Contracts, ContractViews){
 			that.moduleMainSelector = options.moduleMainSelector || '.moduleContractMain';
 			that.moduleFooterSelector = options.moduleFooterSelector || '.moduleContractFooter';
 
-			//that.contract = new Contracts.Model();
+			that.contract = new Contracts.Model();
 
 			that.moduleMainView = new ContractViews.Master({ el: $(that.containerSelector) });
 
-			//that.contractView = new ContractViews.Detatil();
+			that.contractView = new ContractViews.Detail({model: that.contract});
 
 			that.contractSearchView = new ContractViews.Search();
 
@@ -43,8 +43,9 @@ function($, Backbone, Contracts, ContractViews){
 			that.contractListView = new ContractViews.List({collection: that.contractList});
 		},
 
-		rootPage: function(){
+		rootPage: function(other){
 			var that = this;
+			if(other) console.log('Incorrect URL, tried to reach: '+other);
 			console.log('contracts root');
 			that.moduleMainView.once('rendered', function(){
 				$(that.moduleMainSelector).html('<h3>Contracts Main Page</h3>').show();
@@ -92,11 +93,15 @@ function($, Backbone, Contracts, ContractViews){
 			var that = this;
 
 			console.log('contracts details');          
-			// that.contract.set({_id: id});
+			that.contract.set({_id: id});
 
-			// that.contract.fetch({success: function(){
-			// 	that.contractView.render();
-			// }});
+			that.moduleMainView.once('rendered', function(){
+				that.contract.fetch({success: function(){
+					$(that.moduleMainSelector).html(that.contractView.render().el).show();
+				}});
+			});
+
+			that.moduleMainView.render();
 		}//,
 
 		//customerPage:function(){}

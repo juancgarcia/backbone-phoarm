@@ -1,10 +1,15 @@
 define([
+    // Libraries
     'jquery',
-    'backbone',
     'underscore',
+    'backbone',
+
+    // Modules
     'helpers/Guid'
+
+    // Library extensions
 ],
-function($, Backbone, _, Guid){
+function($, _, Backbone, Guid){
 
     var BaseView = Backbone.View.extend({
 

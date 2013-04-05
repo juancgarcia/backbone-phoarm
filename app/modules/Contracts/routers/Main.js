@@ -17,94 +17,88 @@ function($, Backbone, Contracts, ContractViews){
 			''			:'rootPage',
 			'search'	:'searchPage',
 			'list'		:'list',
-			//'product'	:'productPage',
 			'details/:id'	:'detailsPage',
 			'*other'	:'rootPage'
-			//'customer'	:'customerPage'
 		},
 
 		initialize: function(options){
 			var that = this;
 			that.containerSelector = options.containerSelector || '.contractModuleContainer';
-			that.moduleHeaderSelector = options.moduleHeaderSelector || '.moduleContractHeader';
+			// that.moduleHeaderSelector = options.moduleHeaderSelector || '.moduleContractHeader';
 			that.moduleMainSelector = options.moduleMainSelector || '.moduleContractMain';
-			that.moduleFooterSelector = options.moduleFooterSelector || '.moduleContractFooter';
+			// that.moduleFooterSelector = options.moduleFooterSelector || '.moduleContractFooter';
+			that.parentView = options.parentView || undefined;
 
-			that.contract = new Contracts.Model();
-
-			that.moduleMainView = new ContractViews.Master({ el: $(that.containerSelector) });
-
-			that.contractView = new ContractViews.Detail({model: that.contract});
-
-			that.contractSearchView = new ContractViews.Search();
-
-			that.contractList = new Contracts.Collection();
-
-			that.contractListView = new ContractViews.List({collection: that.contractList});
+			that.moduleMainView = new ContractViews.Master({				
+				containerSelector: that.moduleMainSelector,
+				parentView: that.parentView,
+				loadTemplate:true
+			});
 		},
 
 		rootPage: function(other){
-			var that = this;
 			if(other) console.log('Incorrect URL, tried to reach: '+other);
 			console.log('contracts root');
-			that.moduleMainView.once('rendered', function(){
-				$(that.moduleMainSelector).html('<h3>Contracts Main Page</h3>').show();
-			});
-			that.moduleMainView.render();
+			this.moduleMainView.trigger('show');
+			this.moduleMainView.$el.siblings().hide();
 		},
 
 		searchPage: function(){
+			if(!this.contractSearchView){
+				this.contractSearchView = new ContractViews.Search({
+					parentView: this.moduleMainView,
+					loadTemplate:true
+				});
+			}			
+
 			console.log('contracts search');
-
-			var that = this;
-
-			that.moduleMainView.once('rendered', function(){
-				$(that.moduleMainSelector).html(that.contractSearchView.render().el).show();
-			}, that);
-			that.moduleMainView.render();
+			this.contractSearchView.trigger('show').$el.siblings().hide();
+			this.moduleMainView.$el.siblings().hide();
 		},
 
 		list: function(page){
+			if(!this.contractList)
+				this.contractList = new Contracts.Collection();
+			if(!this.contractListView){
+				this.contractListView = new ContractViews.List({
+					collection: this.contractList,
+					parentView: this.moduleMainView,
+					loadTemplate:true
+				});
+			}
+			var that = this;
 			console.log('contracts list');
+			this.contractListView.$el.siblings().hide();
 
 			// var p = page ? parseInt(page, 10) : 1;
-			var that = this;
-
-			that.moduleMainView.once('rendered', function(){
-				that.contractList.fetch({
-					success: function(contracts, response, options){
-						$(that.moduleMainSelector).html(that.contractListView.render().el).show();
-					//that.contractListView.render();
-					},
-					error: function(contracts, response, options){
-						alert('Couldn\' fetch list');
-						console.log('Err-Contracts: '+JSON.stringify(contracts));
-						console.log('Err-Response: '+JSON.stringify(response));
-						console.log('Err-Options: '+JSON.stringify(options));
-					}
-				});
+			that.contractList.fetch({
+				success: function(contracts, response, options){
+					that.contractListView.render().trigger('show');
+				},
+				error: function(contracts, response, options){
+					alert('Couldn\' fetch list');
+				}
 			});
-			that.moduleMainView.render();
+			this.moduleMainView.$el.siblings().hide();
 		},
 
-		//productPage	:function(){},
-
 		detailsPage: function(id){
-			var that = this;
+			if(!this.contract)
+				this.contract = new Contracts.Model();
+			if(!this.contractView){
+				this.contractView = new ContractViews.Detail({
+					model: this.contract,
+					parentView: this.moduleMainView,
+					loadTemplate:true
+				});
+			}
 
-			console.log('contracts details');          
-			that.contract.set({_id: id});
-
-			that.moduleMainView.once('rendered', function(){
-				that.contract.fetch({success: function(){
-					$(that.moduleMainSelector).html(that.contractView.render().el).show();
-				}});
-			});
-
-			that.moduleMainView.render();
-		}//,
-
-		//customerPage:function(){}
+			console.log('contracts details');
+			this.contractView.$el.siblings().hide();
+          
+			this.contract.set({_id: id});
+			this.moduleMainView.$el.siblings().hide();
+		}
 	});
 
 	return ContractRouter;

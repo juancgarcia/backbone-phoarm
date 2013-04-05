@@ -13,6 +13,7 @@ function(_, Backbone){
 	var Contract = Backbone.Model.extend({
 		defaults: {
 			vin: '',
+			title: '',
 			timestamp: 0,
 			completed: false
 		},

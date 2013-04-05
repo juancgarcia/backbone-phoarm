@@ -16,7 +16,19 @@ function(Backbone, BaseModule, relativeRequire){
 
 		_relativeRequire: relativeRequire,
 
-		_templatePath: '../tpl/'
+		_templatePath: '../tpl/',
+
+		initialize: function(){
+			var theView = this;	
+			this.model.on('change:_id', function(){
+				this.model.fetch({
+					success: function(){
+						theView.render().trigger('show');
+					}
+				});
+			}, this);
+			BaseModule.Views.Base.prototype.initialize.apply(this, arguments);
+		}
 	    
 	});
 

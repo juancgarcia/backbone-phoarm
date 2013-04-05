@@ -6,16 +6,23 @@ define([
 
 	// Modules
 	'./ContractListItem',
-	'modules/Base/Main'
+	'modules/Base/Main',
+	'require'
 
 	// Library extensions
 ],
-function($, _, Backbone, ContractView, BaseModule){
-	var ContractListView = Backbone.View.extend({
+function($, _, Backbone, ContractView, BaseModule, relativeRequire){
+
+	var ContractListView = BaseModule.Views.Base.extend({
 		tagName: 'ul',
+		
 		className: 'ContractListView',
+		_relativeRequire: relativeRequire,
+		_templatePath: '../tpl/',
+
 		initialize: function(){
 			this.collection.on('reset', this.render, this);
+			BaseModule.Views.Base.prototype.initialize.apply(this, arguments);
 		},
 		render: function(){
 			this.$el.empty().hide();

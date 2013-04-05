@@ -88,15 +88,14 @@ function($, Backbone, Contracts, ContractViews){
 			if(!this.contractView){
 				this.contractView = new ContractViews.Detail({
 					model: this.contract,
-					parentView: this.moduleMainView,
-					loadTemplate:true
+					parentView: this.moduleMainView
 				});
 			}
 
 			console.log('contracts details');
 			this.contractView.$el.siblings().hide();
           
-			this.contract.set({_id: id});
+			this.contract.set({_id: parseInt(id)});
 			this.moduleMainView.$el.siblings().hide();
 		}
 	});

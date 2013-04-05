@@ -17,8 +17,7 @@ function($, Backbone, AppViews, ContractsModule) {
 			'': 'home',
 			'list': 'list',
 			'about': 'about',
-			'contracts/*subroute': 'invokeContractsModule',
-			'main': 'main'
+			'contracts/*subroute': 'invokeContractsModule'
 		},
 
 		initialize: function(){

@@ -4,17 +4,12 @@ define([
 	'backbone',
 
 	// Modules
-	'views/Header',
-	'views/Home',
-	'views/List',
-	'views/About',
-	'views/Main',
-	'modules/Contracts/Main' /*,
-	'backbone.subroute'*/
+	'views/all',
+	'modules/Contracts/Main'
 
 	// Library extensions
 ],
-function($, Backbone, HeaderView, HomeView, ListView, AboutView, MainView, ContractsModule/*, Subroute*/) {
+function($, Backbone, AppViews, ContractsModule) {
 
 	var Routers = {},
 		AppRouter = Backbone.Router.extend({
@@ -29,49 +24,56 @@ function($, Backbone, HeaderView, HomeView, ListView, AboutView, MainView, Contr
 		initialize: function(){
 			var that = this;
 			that.containerSelector = '.appContainer';
-			that.headerView = new HeaderView({el: $('.header'), loadTemplate:true});
-			//that.mainView = new MainView({el: $('.container')});
-			that.homeView = new HomeView({el: $(that.containerSelector)});
-			that.aboutView = new AboutView({el: $(that.containerSelector)});
-			that.listView = new ListView({el: $(that.containerSelector)});
+			that.headerView = new AppViews.Header({el: $('.header'), loadTemplate:true});
+
+			that.rootView = new AppViews.Wrapper({
+				el: $(that.containerSelector) //attach view here (element must exist)
+				//,containerSelector: that.containerSelector //append children here
+			});
 		},
 
-		// main: function(){
-		//   this.mainView.$el.show();
-		// },
-
 		invokeContractsModule: function(subroute){
-			var that = this;
+			this.rootView.$el.children().hide();
 			if(!Routers.Contracts){
 				Routers.Contracts = new ContractsModule.Router("contracts", {
 					createTrailingSlashRoutes: true,
-					containerSelector: that.containerSelector
+					containerSelector: this.containerSelector,
+					parentView: this.rootView
 				});
 			}
 		},
 
 		home: function(){
-			this.homeView.render();
+			if(!this.homeView){
+				this.homeView = new AppViews.Home({
+					parentView: this.rootView,
+					loadTemplate:true
+				});
+			}
+			this.homeView.$el.siblings().hide();
+			this.homeView.trigger('show');
 		},
 
 		list: function(){
-			this.listView.render();
-			//var tasks = new Todo.Collection();
-			//var view = new MasterView({collection: tasks});
-			// tasks.fetch({
-			//   success: function(tasks){
-			//     $("#container").html(view.render().el).show();
-			//   },
-			//   error: function(model, error) {
-			//     // TODO: handle errors nicer
-			//     alert(error);
-			//   }
-			// });
+			if(!this.listView){			
+				this.listView = new AppViews.List({
+					parentView: this.rootView,
+					loadTemplate:true
+				});
+			}
+			this.listView.$el.siblings().hide();
+			this.listView.trigger('show');
 		},
 
-
 		about: function(){
-			this.aboutView.render();
+			if(!this.aboutView){
+				this.aboutView = new AppViews.About({
+					parentView: this.rootView,
+					loadTemplate:true
+				});
+			}
+			this.aboutView.$el.siblings().hide();
+			this.aboutView.trigger('show');
 		}
 	});
 

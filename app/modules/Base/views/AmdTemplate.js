@@ -57,7 +57,7 @@ function($, _, Backbone, Guid){
             if(!this._templatePath)
                 this._templatePath = '/tpl/';
 
-            console.log('Template Path ('+this._templatePath+') for: '+this.getClassName());
+            // console.log('Template Path ('+this._templatePath+') for: '+this.getClassName());
             return this._templatePath;
         },
 

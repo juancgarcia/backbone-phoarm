@@ -42,7 +42,7 @@ function($, _, Backbone, AmdTemplateView){
 				var data = (that.model)? that.model.toJSON(): {};
 				$el.html(that.template(data)).show();
 				that.renderChildren();
-				console.log('rendered: '+that.getInstanceId());
+				//console.log('rendered: '+that.getInstanceId());
 				that.trigger('rendered');
 			};
 
@@ -56,11 +56,11 @@ function($, _, Backbone, AmdTemplateView){
 		var $childrenEl;
 		if(this.containerSelector) {
 			$childrenEl = $(this.containerSelector, this.$el);
-			console.log('getChildrenEl ('+this.getClassName()+'): inner container ('+this.containerSelector+') selected');
+			// console.log('getChildrenEl ('+this.getClassName()+'): inner container ('+this.containerSelector+') selected');
 		}
 		else {
 			$childrenEl = this.$el;
-			console.log('getChildrenEl ('+this.getClassName()+'): this.$el ('+$childrenEl.selector+') selected');
+			// console.log('getChildrenEl ('+this.getClassName()+'): this.$el ('+$childrenEl.selector+') selected');
 		}
 		return $childrenEl;
 	};

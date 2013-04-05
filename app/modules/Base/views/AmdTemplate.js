@@ -5,11 +5,11 @@ define([
     'backbone',
 
     // Modules
-    'helpers/Guid'
+    '../helpers/Classy'
 
     // Library extensions
 ],
-function($, _, Backbone, Guid){
+function($, _, Backbone, Classy){
 
     var AmdTemplateView = Backbone.View.extend({
 
@@ -74,18 +74,10 @@ function($, _, Backbone, Guid){
                     callback.call(that);
                 })
             }
-        },
-
-        getClassName: function(){
-            return this.className || 'Base';
-        },
-
-        getInstanceId: function(){
-            return this.getClassName()+' ('+this.getUniqueId()+')'
         }
     });
 
     AmdTemplateView.prototype._baseClass = Backbone.View;
 
-    return AmdTemplateView.extend(Guid);
+    return AmdTemplateView.extend(Classy);
 });

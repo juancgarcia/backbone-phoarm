@@ -17,5 +17,5 @@ body {
 }
 
 ul.nav li {
-	display: inline-block;
+	display: inline;
 }

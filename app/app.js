@@ -34,9 +34,9 @@ function($, Backbone, AppViews, ContractsModule) {
 		invokeContractsModule: function(subroute){
 			this.rootView.$el.children().hide();
 			if(!Routers.Contracts){
-				Routers.Contracts = new ContractsModule.Router("contracts", {
+				Routers.Contracts = ContractsModule.Init({
+					routePath: "contracts", 
 					createTrailingSlashRoutes: true,
-					containerSelector: this.containerSelector,
 					parentView: this.rootView
 				});
 			}

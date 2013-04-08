@@ -27,6 +27,7 @@ require.config({
 		}
 	},
 	'packages': [
-		'modules/Base'
+		'modules/Base',
+		'modules/Contracts'
 	]
 });

@@ -5,7 +5,7 @@ define([
 
 	// Modules
 	'views/all',
-	'modules/Contracts/Main'
+	'modules/Contracts'
 
 	// Library extensions
 ],

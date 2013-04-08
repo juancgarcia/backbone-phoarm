@@ -6,16 +6,18 @@ define([
 	// Modules
 	'../models/Contract',
 	'../views/all',
+	'modules/Base',
 
 	// Library extensions
 	'backbone.subroute'
 ],
-function($, Backbone, Contracts, ContractViews){
+function($, Backbone, Contracts, ContractViews, BaseModule){
 	
 	var ContractRouter = Backbone.SubRoute.extend({
 		routes: {
 			''			:'rootPage',
 			'search'	:'searchPage',
+			'wizard'	:'wizardPage',
 			'list'		:'list',
 			'details/:id'	:'detailsPage',
 			'*other'	:'rootPage'
@@ -53,6 +55,31 @@ function($, Backbone, Contracts, ContractViews){
 
 			console.log('contracts search');
 			this.contractSearchView.trigger('show').$el.siblings().hide();
+			this.moduleMainView.$el.siblings().hide();
+		},
+
+		wizardPage: function(){
+			if(!this.wizardView){
+				this.wizardView = new ContractViews.Wizard({
+					className: 'WizardWrapper',
+					parentView: this.moduleMainView,
+					template: function(){}
+					// loadTemplate:true
+				});
+
+				new ContractViews.WizardSearch({
+					parentView: this.wizardView,
+					loadTemplate:true
+				});
+				new ContractViews.WizardSelection({
+					parentView: this.wizardView,
+					loadTemplate:true
+				})
+			}
+			this.wizardView.reset();
+
+			console.log('new contract wizard');
+			this.wizardView.trigger('show').$el.siblings().hide();
 			this.moduleMainView.$el.siblings().hide();
 		},
 

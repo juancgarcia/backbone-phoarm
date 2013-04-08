@@ -25,5 +25,8 @@ require.config({
 			deps: ['backbone']//,
 			//exports: 'Backbone'
 		}
-	}
+	},
+	'packages': [
+		'modules/Base'
+	]
 });

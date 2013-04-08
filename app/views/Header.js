@@ -4,7 +4,7 @@ define([
 	'backbone',
 
 	// Modules
-	'modules/Base/Main'
+	'modules/Base'
 
 	// Library extensions
 ],

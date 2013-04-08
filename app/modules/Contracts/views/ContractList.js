@@ -6,7 +6,7 @@ define([
 
 	// Modules
 	'./ContractListItem',
-	'modules/Base/Main',
+	'modules/Base',
 	'require'
 
 	// Library extensions

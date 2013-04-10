@@ -26,9 +26,7 @@ function($, Backbone, Contracts, ContractViews, BaseModule){
 		initialize: function(options){
 			var that = this;
 			that.containerSelector = options.containerSelector || '.contractModuleContainer';
-			// that.moduleHeaderSelector = options.moduleHeaderSelector || '.moduleContractHeader';
 			that.moduleMainSelector = options.moduleMainSelector || '.moduleContractMain';
-			// that.moduleFooterSelector = options.moduleFooterSelector || '.moduleContractFooter';
 			that.parentView = options.parentView || undefined;
 
 			that.moduleMainView = new ContractViews.Master({				
@@ -36,6 +34,15 @@ function($, Backbone, Contracts, ContractViews, BaseModule){
 				parentView: that.parentView,
 				loadTemplate:true
 			});
+
+			that.currentView = null;
+		},
+
+		swapView: function(view){
+			if(this.currentView){
+				this.currentView.remove();
+			}
+			this.currentView = view.trigger('show');
 		},
 
 		rootPage: function(other){
@@ -46,84 +53,72 @@ function($, Backbone, Contracts, ContractViews, BaseModule){
 		},
 
 		searchPage: function(){
-			if(!this.contractSearchView){
-				this.contractSearchView = new ContractViews.Search({
-					parentView: this.moduleMainView,
-					loadTemplate:true
-				});
-			}			
+			var contractSearchView = new ContractViews.Search({
+				parentView: this.moduleMainView
+			});
+
+			this.swapView(contractSearchView);
 
 			console.log('contracts search');
-			this.contractSearchView.trigger('show').$el.siblings().hide();
-			this.moduleMainView.$el.siblings().hide();
 		},
 
 		wizardPage: function(){
-			if(!this.wizardView){
-				this.wizardView = new ContractViews.Wizard({
-					className: 'WizardWrapper',
+			wizardView = new ContractViews.Wizard({
+					model: new Backbone.Model(),
 					parentView: this.moduleMainView,
-					template: function(){}
-					// loadTemplate:true
+					containerSelector: '.ContractWizardContainer'
 				});
 
-				new ContractViews.WizardSearch({
-					parentView: this.wizardView,
-					loadTemplate:true
-				});
-				new ContractViews.WizardSelection({
-					parentView: this.wizardView,
-					loadTemplate:true
-				})
-			}
-			this.wizardView.reset();
+				var steps = [
+					new ContractViews.WizardSearch({
+						model: new Backbone.Model()
+					}),
+					new ContractViews.WizardSelection({
+						model: new Backbone.Model()
+					})
+				];
+				wizardView.addSteps(steps);
+			
+			wizardView.reset();
+			this.swapView(wizardView);
 
 			console.log('new contract wizard');
-			this.wizardView.trigger('show').$el.siblings().hide();
-			this.moduleMainView.$el.siblings().hide();
 		},
 
 		list: function(page){
-			if(!this.contractList)
-				this.contractList = new Contracts.Collection();
-			if(!this.contractListView){
-				this.contractListView = new ContractViews.List({
-					collection: this.contractList,
-					parentView: this.moduleMainView,
-					loadTemplate:true
-				});
-			}
+			var contractList = new Contracts.Collection();
+			var contractListView = new ContractViews.List({
+				collection: contractList,
+				parentView: this.moduleMainView
+			});
 			var that = this;
 			console.log('contracts list');
-			this.contractListView.$el.siblings().hide();
+
 
 			// var p = page ? parseInt(page, 10) : 1;
-			that.contractList.fetch({
+			contractList.fetch({
 				success: function(contracts, response, options){
-					that.contractListView.render().trigger('show');
+					that.swapView(contractListView);
+					contractListView.render();
 				},
 				error: function(contracts, response, options){
 					alert('Couldn\' fetch list');
 				}
 			});
-			this.moduleMainView.$el.siblings().hide();
 		},
 
 		detailsPage: function(id){
-			if(!this.contract)
-				this.contract = new Contracts.Model();
-			if(!this.contractView){
-				this.contractView = new ContractViews.Detail({
-					model: this.contract,
-					parentView: this.moduleMainView
-				});
-			}
+			var contract = new Contracts.Model();
+			var contractView = new ContractViews.Detail({
+				model: contract,
+				parentView: this.moduleMainView
+			});
+
+			this.swapView(contractView);
 
 			console.log('contracts details');
-			this.contractView.$el.siblings().hide();
           
-			this.contract.set({_id: parseInt(id)});
-			this.moduleMainView.$el.siblings().hide();
+			contract.set({_id: parseInt(id)});
 		}
 	});
 

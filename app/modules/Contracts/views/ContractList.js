@@ -16,18 +16,26 @@ function($, _, Backbone, ContractView, BaseModule, relativeRequire){
 	var ContractListView = BaseModule.Views.Base.extend({
 		tagName: 'ul',
 		
-		className: 'ContractListView',
+		className: 'ContractList',
 		_relativeRequire: relativeRequire,
+		template: function(){},
 		_templatePath: '../tpl/',
 
 		initialize: function(){
 			this.collection.on('reset', this.render, this);
 			BaseModule.Views.Base.prototype.initialize.apply(this, arguments);
 		},
-		render: function(){
+		_renderCallback: function(){
 			this.$el.empty().hide();
 			this.collection.each(this.add, this);
-			return this;
+
+			if(this.parentView)
+				this.parentView.getManagedRegion$El(this.regionSelector || undefined).append(this.$el);
+
+			this.rendered = true;
+			this.trigger('rendered');
+			this.rendering = false;
+			//return this;
 		},
 		add: function(model){
 			var child = new ContractView({model: model});

@@ -49,7 +49,12 @@ function($, Backbone, Contracts, ContractViews, BaseModule){
 			if(other) console.log('Incorrect URL, tried to reach: '+other);
 			console.log('contracts root');
 			this.moduleMainView.trigger('show');
-			this.moduleMainView.$el.siblings().hide();
+			this.moduleMainView.$el.siblings().hide();			
+
+			var contractHome = new ContractViews.Home({
+				parentView: this.moduleMainView
+			});
+			this.swapView(contractHome);
 		},
 
 		searchPage: function(){
@@ -63,21 +68,29 @@ function($, Backbone, Contracts, ContractViews, BaseModule){
 		},
 
 		wizardPage: function(){
-			wizardView = new ContractViews.Wizard({
-					model: new Backbone.Model(),
-					parentView: this.moduleMainView,
-					containerSelector: '.ContractWizardContainer'
-				});
+			var steps = [
+				new ContractViews.WizardSearch({
+					model: new Backbone.Model()
+				}),
+				new ContractViews.WizardSelection({
+					model: new Backbone.Model()
+				}),
+				new ContractViews.WizardOptions({
+					model: new Backbone.Model()
+				}),
+				new ContractViews.WizardCustomer({
+					model: new Backbone.Model()
+				})
+			];
 
-				var steps = [
-					new ContractViews.WizardSearch({
-						model: new Backbone.Model()
-					}),
-					new ContractViews.WizardSelection({
-						model: new Backbone.Model()
-					})
-				];
-				wizardView.addSteps(steps);
+			wizardView = new ContractViews.Wizard({
+				model: new Backbone.Model(),
+				parentView: this.moduleMainView,
+				containerSelector: '.ContractWizardContainer',
+				steps: steps
+			});
+
+			//wizardView.addSteps(steps);
 			
 			wizardView.reset();
 			this.swapView(wizardView);

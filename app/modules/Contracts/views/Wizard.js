@@ -22,7 +22,9 @@ function(_, Backbone, BaseModule, Search, Selection, relativeRequire){
 		_templatePath: '../tpl/',
 
 		events: {
-			"click button.next": "next"
+			"click button.next": "next",
+			"click button.reset": "reset",
+			"click button.submit": "submit"
 		},
 
 		initialize: function(args){
@@ -30,71 +32,75 @@ function(_, Backbone, BaseModule, Search, Selection, relativeRequire){
 			// this.selectionView = require('./WizardSelection');
 
 			BaseModule.Views.Base.prototype.initialize.apply(this, arguments);
+			this.steps = args.steps || [];
+			this.reset();
 		},
-		show: function(action, context){
-			//action is a callback
-			context = context || this;
-			if(!this.rendered){
-				this.on('rendered', action, context);
-				if(!this.rendering)
-					this.render();
+		// show: function(action, context){
+		// 	//action is a callback
+		// 	context = context || this;
+
+		// 	if(!this.rendered){
+		// 		this.on('rendered', action, context);
+		// 		if(!this.rendering)
+		// 			this.render();
+		// 	}
+		// 	else
+		// 		action.call(context);
+		// },
+		showStepAt: function(index){
+			if(_.isArray(this.steps) && 0 <= index && index < this.steps.length){
+				this.currentStep = index;
+				this.showStep(this.steps[index]);
+				this.setButtonState('button.next', this.hasNext());
+				var submitState = index == this.steps.length - 1;
+				this.setButtonState('button.submit', submitState);
 			}
-			else
-				action.call(context);
+		},
+		showStep: function(view){
+			if(this.currentView)
+				this.currentView.remove();
+
+			view.parentView = this;
+			view.render();
+			this.currentView = view;
 		},
 		reset: function(){
-			_.invoke(this.children, 'trigger', ['hide']);
-
-			if(this.initialView)
-				this.initialView.trigger('show');
-			this.currentStep = 0;
+			this.showStepAt(0);
 		},
 		addSteps: function(views){
 			var that = this,
-				wasEmpty = (this.children)? this.children.length < 1: true;
+				wasEmpty = (this.steps)? this.steps.length < 1: true;
 			_.each(views, function(view){
-				//that.appendChild(view);
-				that.children = that.children || [];
-				that.children.push(view);
+				that.steps = that.steps || [];
+				that.steps.push(view);
 				view.parentView = that;
 			});
 
-			if(wasEmpty) this.initialView = this.children[0];
-			this.setNextButtonState(this.hasNext());
+			if(wasEmpty) this.initialView = this.steps[0];
 		},
 		next: function(){
-			if(this.currentStep == undefined)
-				this.currentStep = 0;
-
-			var currentView = this.children[this.currentStep];
-
 			// currentView.doValidation()
 
-			this.model.set(_.clone(currentView.model.attributes));
+			// get data from sub form
+			this.model.set(_.clone(this.currentView.model.attributes));
 
-			//advance to next
-			if(this.children.length > this.currentStep + 1){
-				currentView.$el.hide();
-				currentView = this.children[++this.currentStep];
-				currentView.trigger('show');
-
-				this.setNextButtonState(this.hasNext());
+			// advance to next
+			if(this.hasNext()){				
+				this.showStepAt(++this.currentStep);
+			} else {
+				this.setButtonState('button.next', !this.hasNext());
 			}
 		},
 		hasNext: function(){
-			return this.currentStep < this.children.length - 1;
+			return this.currentStep < this.steps.length - 1;
 		},
-		setNextButtonState: function(hasNext){
-			if(hasNext === undefined)
-				hasNext = true;
-			this.$('button.next').attr({"disabled":!hasNext});
+		setButtonState: function(btnSelector, state){
+			if(state === undefined)
+				state = true;
+			this.$(btnSelector).attr({"disabled":!state});
 		},
+		submit: function(){
 
-		appendChild: function(childView){
-			var that = this;
-			that.children = that.children || [];
-			that.children.push(childView);
-			return that;
 		}
 	    
 	});

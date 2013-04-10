@@ -3,20 +3,25 @@ define([
 
 	// Modules
 	'./Master',
+	'./ContractHome',
 	'./ContractSearch',
 	'./Detail',
 	'./ContractList',
 	'./ContractListItem',
 	'./Wizard',
 	'./WizardSearch',
-	'./WizardSelection'
+	'./WizardSelection',
+	'./WizardOptions',
+	'./WizardCustomer'
 
 	// Library extensions
 ],
-function(MasterView, SearchView, DetailView, ListView, ListItemView, Wiz, WizSearch, WizSelection){
+function(MasterView, HomeView, SearchView, DetailView, ListView, ListItemView,
+	Wiz, WizSearch, WizSelection, WizOptions, WizCustomer){
 	var Views = {};
 
 	Views.Master = MasterView;
+	Views.Home = HomeView;
 	Views.Search = SearchView;
 	Views.Detail = DetailView;
 	Views.List = ListView;
@@ -24,6 +29,8 @@ function(MasterView, SearchView, DetailView, ListView, ListItemView, Wiz, WizSea
 	Views.Wizard = Wiz;
 	Views.WizardSearch = WizSearch;
 	Views.WizardSelection = WizSelection;
+	Views.WizardOptions = WizOptions;
+	Views.WizardCustomer = WizCustomer;
 
 	return Views;	
 });

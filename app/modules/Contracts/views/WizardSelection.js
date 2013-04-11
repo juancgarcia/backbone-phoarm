@@ -16,7 +16,25 @@ function(Backbone, BaseModule, relativeRequire){
 
 		_relativeRequire: relativeRequire,
 
-		_templatePath: '../tpl/'
+		_templatePath: '../tpl/',
+
+		events: {
+			"click button.next": "next"/*,
+			"click button.reset": "reset",
+			"click button.submit": "submit"*/
+		},
+
+		next: function(){
+			// do validation
+			var valid = true;
+
+			if(valid){
+				// run search
+				var success = true;
+				if(success)
+					this.trigger("complete");
+			}
+		}
 
 	});
 

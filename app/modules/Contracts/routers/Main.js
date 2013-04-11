@@ -7,11 +7,12 @@ define([
 	'../models/Contract',
 	'../views/all',
 	'modules/Base',
+	'../workflows/CreateContract',
 
 	// Library extensions
 	'backbone.subroute'
 ],
-function($, Backbone, Contracts, ContractViews, BaseModule){
+function($, Backbone, Contracts, ContractViews, BaseModule, Wizard){
 
 	var ContractRouter = Backbone.SubRoute.extend({
 		routes: {
@@ -68,27 +69,13 @@ function($, Backbone, Contracts, ContractViews, BaseModule){
 		},
 
 		wizardPage: function(){
-			var steps = [
-				new ContractViews.WizardSearch({
-					model: new Backbone.Model()
-				}),
-				new ContractViews.WizardSelection({
-					model: new Backbone.Model()
-				}),
-				new ContractViews.WizardOptions({
-					model: new Backbone.Model()
-				}),
-				new ContractViews.WizardCustomer({
-					model: new Backbone.Model()
-				})
-			];
-
-			wizardView = new ContractViews.Wizard({
+			var wizardView = new ContractViews.Wizard({
 				model: new Backbone.Model(),
 				parentView: this.moduleMainView,
-				containerSelector: '.ContractWizardContainer',
-				steps: steps
+				containerSelector: '.ContractWizardContainer'
 			});
+
+			new Wizard({wrapper: wizardView});
 
 			this.swapView(wizardView);
 

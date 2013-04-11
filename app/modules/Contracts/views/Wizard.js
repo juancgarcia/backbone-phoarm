@@ -57,10 +57,17 @@ function(_, Backbone, BaseModule, Search, Selection, relativeRequire){
 			}
 		},
 		showStep: function(view){
-			if(this.currentView)
-				this.currentView.remove();
-
+			if(this.currentView){
+				var oldView = this.currentView;
+				this.currentView.$el.slideUp(function(){
+					oldView.off();
+					oldView.remove();
+				});
+			}
 			view.parentView = this;
+			view.on('rendered', function(){
+				view.$el.hide().slideDown();
+			});
 			view.render();
 			this.currentView = view;
 		},

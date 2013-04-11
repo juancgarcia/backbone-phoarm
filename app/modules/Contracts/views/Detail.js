@@ -11,7 +11,7 @@ define([
 function(Backbone, BaseModule, relativeRequire){
 
 	var DetailView = BaseModule.Views.Base.extend({
-		
+
 		className: 'ContractDetail',
 
 		_relativeRequire: relativeRequire,
@@ -19,7 +19,7 @@ function(Backbone, BaseModule, relativeRequire){
 		_templatePath: '../tpl/',
 
 		initialize: function(){
-			var theView = this;	
+			var theView = this;
 			this.model.on('change:_id', function(){
 				this.model.fetch({
 					success: function(){
@@ -29,7 +29,7 @@ function(Backbone, BaseModule, relativeRequire){
 			}, this);
 			BaseModule.Views.Base.prototype.initialize.apply(this, arguments);
 		}
-	    
+
 	});
 
 	return DetailView;

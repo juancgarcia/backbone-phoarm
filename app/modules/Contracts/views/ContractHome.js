@@ -11,7 +11,7 @@ define([
 function(Backbone, BaseModule, relativeRequire){
 
 	var HomeView = BaseModule.Views.Base.extend({
-		
+
 		className: 'ContractHome',
 
 		// _relativeRequire: relativeRequire,
@@ -19,7 +19,7 @@ function(Backbone, BaseModule, relativeRequire){
 		// _templatePath: '../tpl/'
 
 		template: _.template('<div>Contracts Home</div>')
-	    
+
 	});
 
 	return HomeView;

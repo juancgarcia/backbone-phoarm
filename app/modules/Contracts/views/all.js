@@ -32,5 +32,5 @@ function(MasterView, HomeView, SearchView, DetailView, ListView, ListItemView,
 	Views.WizardOptions = WizOptions;
 	Views.WizardCustomer = WizCustomer;
 
-	return Views;	
+	return Views;
 });

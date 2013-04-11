@@ -14,9 +14,9 @@ define([
 function(_, Backbone, BaseModule, Search, Selection, relativeRequire){
 
 	var SearchView = BaseModule.Views.Base.extend({
-		
+
 		className: 'Wizard',
-		
+
 		_relativeRequire: relativeRequire,
 
 		_templatePath: '../tpl/',
@@ -36,16 +36,16 @@ function(_, Backbone, BaseModule, Search, Selection, relativeRequire){
 			this.reset();
 		},
 		// show: function(action, context){
-		// 	//action is a callback
-		// 	context = context || this;
+		// //action is a callback
+		// context = context || this;
 
-		// 	if(!this.rendered){
-		// 		this.on('rendered', action, context);
-		// 		if(!this.rendering)
-		// 			this.render();
-		// 	}
-		// 	else
-		// 		action.call(context);
+		// if(!this.rendered){
+		//		this.on('rendered', action, context);
+		//		if(!this.rendering)
+		//			this.render();
+		//	}
+		//	else
+		//		action.call(context);
 		// },
 		showStepAt: function(index){
 			if(_.isArray(this.steps) && 0 <= index && index < this.steps.length){
@@ -85,7 +85,7 @@ function(_, Backbone, BaseModule, Search, Selection, relativeRequire){
 			this.model.set(_.clone(this.currentView.model.attributes));
 
 			// advance to next
-			if(this.hasNext()){				
+			if(this.hasNext()){
 				this.showStepAt(++this.currentStep);
 			} else {
 				this.setButtonState('button.next', !this.hasNext());
@@ -102,7 +102,7 @@ function(_, Backbone, BaseModule, Search, Selection, relativeRequire){
 		submit: function(){
 
 		}
-	    
+
 	});
 
 	return SearchView;

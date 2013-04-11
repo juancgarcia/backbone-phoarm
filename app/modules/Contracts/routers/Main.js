@@ -12,7 +12,7 @@ define([
 	'backbone.subroute'
 ],
 function($, Backbone, Contracts, ContractViews, BaseModule){
-	
+
 	var ContractRouter = Backbone.SubRoute.extend({
 		routes: {
 			''			:'rootPage',
@@ -29,7 +29,7 @@ function($, Backbone, Contracts, ContractViews, BaseModule){
 			that.moduleMainSelector = options.moduleMainSelector || '.moduleContractMain';
 			that.parentView = options.parentView || undefined;
 
-			that.moduleMainView = new ContractViews.Master({				
+			that.moduleMainView = new ContractViews.Master({
 				containerSelector: that.moduleMainSelector,
 				parentView: that.parentView,
 				loadTemplate:true
@@ -49,7 +49,7 @@ function($, Backbone, Contracts, ContractViews, BaseModule){
 			if(other) console.log('Incorrect URL, tried to reach: '+other);
 			console.log('contracts root');
 			this.moduleMainView.trigger('show');
-			this.moduleMainView.$el.siblings().hide();			
+			this.moduleMainView.$el.siblings().hide();
 
 			var contractHome = new ContractViews.Home({
 				parentView: this.moduleMainView
@@ -91,7 +91,7 @@ function($, Backbone, Contracts, ContractViews, BaseModule){
 			});
 
 			//wizardView.addSteps(steps);
-			
+
 			wizardView.reset();
 			this.swapView(wizardView);
 
@@ -130,8 +130,8 @@ function($, Backbone, Contracts, ContractViews, BaseModule){
 			this.swapView(contractView);
 
 			console.log('contracts details');
-          
-			contract.set({_id: parseInt(id)});
+
+			contract.set({_id: parseInt(id, 10)});
 		}
 	});
 

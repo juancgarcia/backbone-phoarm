@@ -90,9 +90,6 @@ function($, Backbone, Contracts, ContractViews, BaseModule){
 				steps: steps
 			});
 
-			//wizardView.addSteps(steps);
-
-			wizardView.reset();
 			this.swapView(wizardView);
 
 			console.log('new contract wizard');

@@ -70,7 +70,9 @@ function($, _, Backbone, ContractViews){
 			.on("next", function(){
 				if(_.isEmpty(workflow.currentForm.validate())){
 					// optionally extract data out of form
-					// var formData = workflow.currentForm.model.toJSON();
+					workflow.currentForm.commit();
+					var formData = workflow.currentForm.model.toJSON();
+					console.log('step: '+JSON.stringify(formData));
 					workflow.currentForm.trigger("complete");
 				}
 			})

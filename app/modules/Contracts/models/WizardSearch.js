@@ -1,7 +1,7 @@
 define([
 	// Libraries
 	'underscore',
-	'backbone',
+	'backbone'
 
 	// Modules
 
@@ -21,7 +21,7 @@ function(_, Backbone){
 		parse : function(response){
 			// for testing with static JSON
 			var obj = _.find(response, function(contract){
-				if(!contract || isNaN(parseInt(contract._id)) )
+				if(!contract || isNaN(parseInt(contract._id, 10)) )
 					return false;
 				return contract._id == this.get('_id');
 			}, this);

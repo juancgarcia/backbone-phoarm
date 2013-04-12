@@ -15,8 +15,8 @@ function(Backbone){
 			vin: 'Text',
 			stock: 'Text',
 			mileage: 'Number',
-			condition: { type: 'Select', options: ['new', 'used'] }/*,
-			"saleDate": 'Date'*/
+			condition: { type: 'Select', options: ['new', 'used'] },
+			"saleDate": 'Date'
 		}
 
 	});

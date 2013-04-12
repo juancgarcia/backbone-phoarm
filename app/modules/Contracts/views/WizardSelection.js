@@ -3,36 +3,22 @@ define([
 	'backbone',
 
 	// Modules
-	'modules/Base',
-	'require'
 
 	// Library extensions
+	'backbone.forms'
 ],
-function(Backbone, BaseModule, relativeRequire){
+function(Backbone){
 
-	var SelectionView = BaseModule.Views.Base.extend({
+	var SelectionView = Backbone.Form.extend({
 
-		className: 'WizardSelection',
-
-		_relativeRequire: relativeRequire,
-
-		_templatePath: '../tpl/',
-
-		events: {
-			"click button.next": "next"/*,
-			"click button.reset": "reset",
-			"click button.submit": "submit"*/
-		},
-
-		next: function(){
-			// do validation
-			var valid = true;
-
-			if(valid){
-				// run search
-				var success = true;
-				if(success)
-					this.trigger("complete");
+		schema: {
+			product: {
+				type: 'Select',
+				options: [
+					'Product1',
+					'Product2',
+					'Product3'
+					]
 			}
 		}
 

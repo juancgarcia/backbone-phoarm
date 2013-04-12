@@ -6,6 +6,7 @@ require.config({
 		backbone: 'vendor/backbone-1.0.0',// //cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js
 		'backbone.localStorage': 'vendor/backbone.localStorage',
 		'backbone.subroute':'vendor/backbone.subroute-0.3.2',
+		'backbone.forms':'vendor/backbone-forms',
 		'text': 'vendor/requirejs.text-2.0.5'
 		// //cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.1.1/bootstrap.min.js
 	},
@@ -22,8 +23,10 @@ require.config({
 			exports: 'Backbone'
 		},
 		'backbone.subroute':{
-			deps: ['backbone']//,
-			//exports: 'Backbone'
+			deps: ['backbone']
+		},
+		'backbone.forms':{
+			deps: ['backbone']
 		}
 	},
 	'packages': [

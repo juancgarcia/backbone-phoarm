@@ -3,37 +3,19 @@ define([
 	'backbone',
 
 	// Modules
-	'modules/Base',
-	'require'
 
 	// Library extensions
+	'backbone.forms'
 ],
-function(Backbone, BaseModule, relativeRequire){
+function(Backbone){
 
-	var CustomerView = BaseModule.Views.Base.extend({
+	var CustomerView = Backbone.Form.extend({
 
-		className: 'WizardCustomer',
-
-		_relativeRequire: relativeRequire,
-
-		_templatePath: '../tpl/',
-
-		events: {
-			"click button.next": "next"/*,
-			"click button.reset": "reset",
-			"click button.submit": "submit"*/
-		},
-
-		next: function(){
-			// do validation
-			var valid = true;
-
-			if(valid){
-				// run search
-				var success = true;
-				if(success)
-					this.trigger("complete");
-			}
+		schema: {
+			title: { type: 'Select', options: ['Mr', 'Mrs', 'Ms'] },
+			name: 'Text',
+			email: { type: 'Text'/*, validators: ['required', 'email']*/ }/*,
+			address: { type: 'NestedModel', model: Address }*/
 		}
 
 	});

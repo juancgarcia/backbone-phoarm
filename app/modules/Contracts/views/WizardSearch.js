@@ -3,37 +3,20 @@ define([
 	'backbone',
 
 	// Modules
-	'modules/Base',
-	'require'
 
 	// Library extensions
+	'backbone.forms'
 ],
-function(Backbone, BaseModule, relativeRequire){
+function(Backbone){
 
-	var SearchView = BaseModule.Views.Base.extend({
+	var SearchView = Backbone.Form.extend({
 
-		className: 'WizardSearch',
-
-		_relativeRequire: relativeRequire,
-
-		_templatePath: '../tpl/',
-
-		events: {
-			"click button.next": "next"/*,
-			"click button.reset": "reset",
-			"click button.submit": "submit"*/
-		},
-
-		next: function(){
-			// do validation
-			var valid = true;
-
-			if(valid){
-				// run search
-				var success = true;
-				if(success)
-					this.trigger("complete");
-			}
+		schema: {
+			vin: 'Text',
+			stock: 'Text',
+			mileage: 'Number',
+			condition: { type: 'Select', options: ['new', 'used'] }/*,
+			"saleDate": 'Date'*/
 		}
 
 	});

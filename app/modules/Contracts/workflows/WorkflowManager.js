@@ -71,55 +71,18 @@ function($, _, Backbone, ContractViews){
 				workflow.currentForm.send();
 			}
 		})
-		.on("submit", workflow.submitContract, workflow);
+		.on("submit", workflow.getState('finalState'), workflow);
 
-		workflow.initialState.call(workflow);
+		workflow.getState('initialState').call(workflow);
 	};
-	WorkflowManager.prototype.initialState = function(){};
-	WorkflowManager.prototype.defineSteps = function(){
-		var workflow = this;
-
-		workflow.states = workflow.states || {};
-
-		var states = {
-			'initialState': function(){
-				var search = workflow.getForm(ContractViews.WizardSearch);
-				//.on("complete", startProduct);
-				workflow.setNextState('startProduct');
-				var resetButtons = function() {
-					wizard.setButtonState({
-						'prev': false,
-						'next': true,
-						'reset': true,
-						'submit': false
-					});
-				};
-				if(!wizard.rendered)
-					wizard.on('rendered', resetButtons);
-				else
-					resetButtons();
-			},
-			'startProduct': function(){
-				var product = workflow.getForm(
-					ContractViews.WizardSelection,
-					Backbone.Model.extend({schema:{
-						product: {type: /*'Radio'*/ 'Select', options: workflow.serverResponse.toJSON()}
-					}}));
-				workflow.setNextState('startOption');
-				wizard.setButtonState({'prev':true, 'next': true});
-			},
-			'startOption': function(){
-				var option = workflow.getForm(ContractViews.WizardOptions);
-					workflow.setNextState('startCustomer');
-					wizard.setButtonState({'prev':true, 'next': true});
-			},
-			'startCustomer': function(){
-				var customer = workflow.getForm(ContractViews.WizardCustomer);
-				//.on("complete", function(){ workflow.submitContract(); });
-				workflow.setNextState('finalState');
-				wizard.setButtonState({'prev':true, 'next': false, 'submit': true});
-			}
-		};
+	WorkflowManager.prototype.getState = function(stateId){
+		if(!this.states || !this.states[stateId])
+			return function(){};
+		else
+			return workflow.states[stateId];
+	};
+	WorkflowManager.prototype.setStates = function(steps){
+		this.steps = _.extend(this.steps || {}, steps);
 	};
 	WorkflowManager.prototype.triggerState = function(stateId){
 		this.states[stateId].call(this);
@@ -154,7 +117,7 @@ function($, _, Backbone, ContractViews){
 	WorkflowManager.prototype.reset = function(){
 		this.wizardData.clear();
 		this.serverResponse.reset()/*.clear()*/;
-		this.nextStep = function(){};
+		//this.nextStep = this.states['initialState'];
 	};
 
 	return WorkflowManager;

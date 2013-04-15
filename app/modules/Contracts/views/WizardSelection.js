@@ -9,20 +9,23 @@ define([
 ],
 function(Backbone){
 
-	var SelectionView = Backbone.Form.extend({
+	var SelectionForm = Backbone.Form.extend({
 
-		schema: {
-			product: {
-				type: 'Select',
-				options: [
-					'Product1',
-					'Product2',
-					'Product3'
-					]
-			}
-		}
+		send: function(){
+			var form = this;
+			$.ajax({
+				url: 'http://localhost:8000/data/detail-all.json'
+			}).done(function(data, textStatus, jqXHR){
+				form.succeeded(data, textStatus, jqXHR);
+			}).fail(function(jqXHR, textStatus, errorThrown) {
+				form.failed(jqXHR, textStatus, errorThrown);
+			});
+		},
+		// placeholders
+		failed: function(){},
+		succeeded: function(){}
 
 	});
 
-	return SelectionView;
+	return SelectionForm;
 });

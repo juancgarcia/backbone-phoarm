@@ -19,14 +19,18 @@ function($, _, Backbone, ContractViews){
 	};
 
 	CreateContractWorkflow.prototype.initialize = function(){
-		this.reset();
+		this.wizardData = new Backbone.Model();
+		this.nextData = new (Backbone.Collection.extend({ model: Backbone.Model }))()/*new Backbone.Model()*/;
+
 		var workflow = this,
 			wizard = this.wrapper,
 			wizardData = this.wizardData;
+		this.reset();
 
 		var startSearch = function(){
-				var search = workflow.getForm(ContractViews.WizardSearch)
-					.on("complete", startProduct);
+				var search = workflow.getForm(ContractViews.WizardSearch);
+					//.on("complete", startProduct);
+					workflow.nextStep = startProduct;
 				var resetButtons = function() {
 					wizard.setButtonState({
 						'prev': false,
@@ -41,20 +45,26 @@ function($, _, Backbone, ContractViews){
 					resetButtons();
 			},
 			startProduct = function(){
-				var product = workflow.getForm(ContractViews.WizardSelection)
-					.on("complete", startOption);
+				var product = workflow.getForm(
+						ContractViews.WizardSelection,
+						Backbone.Model.extend({schema:{
+							product: {type: /*'Radio'*/ 'Select', options: workflow.nextData.toJSON()}
+						}}));
+					// .on("complete", startOption);
+					workflow.nextStep = startOption;
 				wizard.setButtonState({'prev':true, 'next': true});
+				// product.
 			},
 			startOption = function(){
-				var option = workflow.getForm(ContractViews.WizardOptions)
-					.on("complete", startCustomer);
+				var option = workflow.getForm(ContractViews.WizardOptions);
+					// .on("complete", startCustomer);
+					workflow.nextStep = startCustomer;
 				wizard.setButtonState({'prev':true, 'next': true});
 			},
 			startCustomer = function(){
-				var customer = workflow.getForm(ContractViews.WizardCustomer)
-					.on("complete", function(){
-						//workflow.submitContract();
-					});
+				var customer = workflow.getForm(ContractViews.WizardCustomer);
+					//.on("complete", function(){ workflow.submitContract(); });
+					workflow.nextStep = workflow.submitContract();
 				wizard.setButtonState({'prev':true, 'next': false, 'submit': true});
 			};
 
@@ -68,12 +78,38 @@ function($, _, Backbone, ContractViews){
 				console.log("'prev' workflow button not implemented");
 			})
 			.on("next", function(){
+				// validates locally
 				if(_.isEmpty(workflow.currentForm.validate())){
-					// optionally extract data out of form
-					workflow.currentForm.commit();
-					var formData = workflow.currentForm.model.toJSON();
-					console.log('step: '+JSON.stringify(formData));
-					workflow.currentForm.trigger("complete");
+
+					workflow.currentForm.on('complete', function(){
+						// optionally extract data out of form
+						workflow.currentForm.commit();
+						var formData = workflow.currentForm.model.toJSON();
+						console.log('step: '+JSON.stringify(formData));
+
+						// save step data to wizard
+						workflow.wizardData.set(formData);
+						console.log('Wizard Data: '+JSON.stringify(workflow.wizardData.toJSON()));
+
+						// workflow.currentForm.trigger("complete");
+						workflow.nextStep();
+					});
+
+					// trigger server validation/submission
+					workflow.currentForm.succeeded = function(data){
+						workflow.nextData.reset(data)/*.clear()*/;
+						//workflow.nextData.set(data);
+						// console.log('Incoming Data: '+JSON.stringify(data));
+						// console.log('Nexted Data: '+JSON.stringify(workflow.nextData.toJSON()));
+
+						this.trigger('complete');
+					};
+
+					workflow.currentForm.failed = function(){
+						this.trigger('incomplete');
+					};
+
+					workflow.currentForm.send();
 				}
 			})
 			.on("submit", workflow.submitContract, workflow);
@@ -81,18 +117,18 @@ function($, _, Backbone, ContractViews){
 		startSearch.call(workflow);
 	};
 	CreateContractWorkflow.prototype.getContainer = function(){
-		// if(this.wrapper)
-			return this.wrapper.getManagedRegion$El();
-		// else{
-		// 	var classname = 'contractWizardContainer';
-		// 	$('body').append($('<div class=".'+classname+'"></div>'));
-		// 	return $('.'+classname);
-		// }
-		// return this.wizardView.get$el();
+		return this.wrapper.getManagedRegion$El();
 	};
-	CreateContractWorkflow.prototype.getForm = function(classConstructor){
+	CreateContractWorkflow.prototype.getForm = function(classConstructor, modelConstructor){
+		var model, data = this.nextData.toJSON() || {};
+
+		if(modelConstructor)
+			model = new modelConstructor(/*data*/);
+		else
+			model = new Backbone.Model(/*data*/);
+
 		var form = new classConstructor({
-			model: this.wizardData //new Backbone.Model({})
+			model: model
 		});
 		form.on("complete", function(){
 			this.off().remove();
@@ -105,7 +141,9 @@ function($, _, Backbone, ContractViews){
 	CreateContractWorkflow.prototype.submitContract = function(){
 	};
 	CreateContractWorkflow.prototype.reset = function(){
-		this.wizardData = new Backbone.Model({});
+		this.wizardData.clear();
+		this.nextData.reset()/*.clear()*/;
+		this.nextStep = function(){};
 	};
 
 	return CreateContractWorkflow;

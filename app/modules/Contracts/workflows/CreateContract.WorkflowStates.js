@@ -14,21 +14,7 @@ function($, _, Backbone, ContractViews){
 		'startSearch': {
 			'action': function(){
 				var workflow = this,
-					wizard = this.wrapper,
 					search = workflow.getForm(ContractViews.WizardSearch);
-				// workflow.setNextState('startProduct');
-				var resetButtons = function() {
-					wizard.setButtonState({
-						'prev': false,
-						'next': true,
-						'reset': true,
-						'submit': false
-					});
-				};
-				if(!wizard.rendered)
-					wizard.on('rendered', resetButtons);
-				else
-					resetButtons();
 			},
 			'prev': void 0,
 			'next': 'startProduct'
@@ -36,14 +22,11 @@ function($, _, Backbone, ContractViews){
 		'startProduct': {
 			'action': function(){
 				var workflow = this,
-					wizard = this.wrapper,
 					product = workflow.getForm(
 						ContractViews.WizardSelection,
 						Backbone.Model.extend({schema:{
 							product: {type: /*'Radio'*/ 'Select', options: workflow.serverResponse.toJSON()}
 						}}));
-				// workflow.setNextState('startOption');
-				wizard.setButtonState({'prev':true, 'next': true});
 			},
 			'prev': 'startSearch',
 			'next': 'startOption'
@@ -51,10 +34,7 @@ function($, _, Backbone, ContractViews){
 		'startOption':{
 			'action': function(){
 				var workflow = this,
-					wizard = this.wrapper,
 					option = workflow.getForm(ContractViews.WizardOptions);
-				// workflow.setNextState('startCustomer');
-				wizard.setButtonState({'prev':true, 'next': true});
 			},
 			'prev': 'startProduct',
 			'next': 'startCustomer'
@@ -62,23 +42,17 @@ function($, _, Backbone, ContractViews){
 		'startCustomer':{
 			'action': function(){
 				var workflow = this,
-					wizard = this.wrapper,
 					customer = workflow.getForm(ContractViews.WizardCustomer);
-				// workflow.setNextState('finalState');
-				wizard.setButtonState({'prev':true, 'next': false, 'submit': true});
 			},
 			'prev': 'startOption',
-			'next': 'submitContract'
+			'next': 'finalState'
 		},
 		'submitContract': {
 			'action': function(){
 				var workflow = this,
-					wizard = this.wrapper,
 					finalStep = workflow.getForm(Backbone.View.extend({
 						template: _.template('<div><h3>Completed!</h3></div>')
 					}));
-				// workflow.setNextState('finalState');
-				wizard.setButtonState({'prev':true, 'next': false, 'submit': false});
 
 				console.log('Contract Submission goes here');
 				// auto-submit the details

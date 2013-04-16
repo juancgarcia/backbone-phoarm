@@ -148,6 +148,21 @@ function($, _, Backbone, ContractViews){
 		}
 	};
 
+	WorkflowManager.prototype.setButtons = function(state){
+		var wizard = this.wrapper,
+			assignState = function(){
+				wizard.setButtonState(state);
+				wizard.off('rendered', assignState);
+			};
+
+		if(wizard.rendered){
+			assignState();
+		} else {
+			wizard.on('rendered', assignState);
+			if(!wizard.rendering) wizard.render();
+		}
+	};
+
 	// Accessors/Helpers for handling the states DS
 	WorkflowManager.prototype.setStates = function(steps){
 		this.steps = _.extend(this.steps || {}, steps);
@@ -167,6 +182,14 @@ function($, _, Backbone, ContractViews){
 	};
 	WorkflowManager.prototype.triggerState = function(stateId){
 		this.setCurrentState(stateId).action.call(this);
+		this.setButtons({
+			'prev': this.getCurrentState().prev !== void 0,
+			'next': this.getCurrentState().next !== 'finalState' &&
+					this.getCurrentState().next !== void 0,
+			'reset': true,
+			'submit': this.getCurrentState().next === 'finalState'/* ||
+					this.getCurrentState().next === void 0*/
+		});
 	};
 	WorkflowManager.prototype.advanceState = function(direction){
 		if(direction !== 'next' && direction != 'prev')

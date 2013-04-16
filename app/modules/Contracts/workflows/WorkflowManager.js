@@ -23,9 +23,8 @@ function($, _, Backbone, ContractViews){
 		this.serverResponse = new (Backbone.Collection.extend({ model: Backbone.Model }))()/*new Backbone.Model()*/;
 
 		var workflow = this,
-		wizard = this.wrapper,
-		wizardData = this.wizardData;
-		this.reset();
+			wizard = this.wrapper,
+			wizardData = this.wizardData;
 
 		wizard
 			.on("prev", workflow.prev, workflow)
@@ -33,7 +32,17 @@ function($, _, Backbone, ContractViews){
 			.on("submit", workflow.submit, workflow)
 			.on("reset", workflow.reset, workflow);
 
-		workflow.triggerState('initialState');
+
+		var kickStart = function(){
+				workflow.reset();
+				wizard.off('rendered', kickStart);
+			};
+		if(wizard.rendered){
+			kickStart();
+		} else {
+			wizard.on('rendered', kickStart);
+			if(!wizard.rendering) wizard.render();
+		}
 	};
 
 	// button handlers

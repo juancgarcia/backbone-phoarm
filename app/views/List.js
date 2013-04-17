@@ -1,17 +1,24 @@
 define([
 	// Libraries
 	'jquery',
+	'underscore',
 	'backbone',
 
 	// Modules
-	'modules/Base'
+	'text!../tpl/List.html'
 
 	// Library extensions
 ],
-function($, Backbone, BaseModule){
+function($, _, Backbone, templateHtml){
 
-	var ListView = BaseModule.Views.Base.extend({
-		className: 'List'
+	var ListView = Backbone.View.extend({
+
+		template: _.template(templateHtml),
+
+		render: function(){
+			this.$el.html(this.template());
+			return this;
+		}
 	});
 
 	return ListView;

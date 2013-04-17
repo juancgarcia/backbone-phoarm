@@ -40,6 +40,7 @@ function($, Backbone, Contracts, ContractViews, BaseModule, Workflows){
 		},
 
 		swapView: function(view){
+			this.moduleMainView.setElement($(this.containerSelector)).render();
 			if(this.currentView){
 				this.currentView.remove();
 			}
@@ -50,7 +51,7 @@ function($, Backbone, Contracts, ContractViews, BaseModule, Workflows){
 			if(other) console.log('Incorrect URL, tried to reach: '+other);
 			console.log('contracts root');
 			this.moduleMainView.trigger('show');
-			this.moduleMainView.$el.siblings().hide();
+			// this.moduleMainView.$el.siblings().hide();
 
 			var contractHome = new ContractViews.Home({
 				parentView: this.moduleMainView

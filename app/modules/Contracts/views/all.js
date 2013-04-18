@@ -4,7 +4,6 @@ define([
 	// Modules
 	'./Master',
 	'./ContractHome',
-	'./ContractSearch',
 	'./Detail',
 	'./ContractList',
 	'./ContractListItem',
@@ -16,13 +15,12 @@ define([
 
 	// Library extensions
 ],
-function(MasterView, HomeView, SearchView, DetailView, ListView, ListItemView,
+function(MasterView, HomeView, DetailView, ListView, ListItemView,
 	Wiz, WizSearch, WizSelection, WizOptions, WizCustomer){
 	var Views = {};
 
 	Views.Master = MasterView;
 	Views.Home = HomeView;
-	Views.Search = SearchView;
 	Views.Detail = DetailView;
 	Views.List = ListView;
 	Views.ListItem = ListItemView;

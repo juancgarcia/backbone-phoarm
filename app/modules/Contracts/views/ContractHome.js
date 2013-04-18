@@ -1,24 +1,24 @@
 define([
 	// Libraries
+	'jquery',
+	'underscore',
 	'backbone',
 
 	// Modules
-	'modules/Base',
-	'require'
+	'text!../tpl/Home.html'
 
 	// Library extensions
 ],
-function(Backbone, BaseModule, relativeRequire){
+function($, _, Backbone, templateHtml){
 
-	var HomeView = BaseModule.Views.Base.extend({
+	var HomeView = Backbone.View.extend({
 
-		className: 'ContractHome',
+		template: _.template(templateHtml),
 
-		// _relativeRequire: relativeRequire,
-
-		// _templatePath: '../tpl/'
-
-		template: _.template('<div>Contracts Home</div>')
+		render: function(){
+			this.$el.html(this.template());
+			return this;
+		}
 
 	});
 

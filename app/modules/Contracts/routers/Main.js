@@ -30,39 +30,26 @@ function($, Backbone, ContractModels, ContractViews, BaseModule, Workflows){
 			that.moduleMainSelector = options.moduleMainSelector || '.moduleContractMain';
 			that.parentView = options.parentView || undefined;
 
-			that.moduleMainView = new ContractViews.Master({
-				containerSelector: that.moduleMainSelector,
-				parentView: that.parentView,
-				loadTemplate:true
-			});
+			that.moduleMainView = new ContractViews.Master().render();
 
 			that.currentView = null;
 		},
 
 		swapView: function(view){
-			this.moduleMainView.setElement($(this.containerSelector)).render();
-			if(this.currentView){
-				this.currentView.remove();
-			}
+			if(this.currentView) this.currentView.off();
 			this.currentView = view.trigger('show');
+			this.moduleMainView.setElement($(this.containerSelector)).render();
+			view.setElement($(this.moduleMainSelector)).render();
 		},
 
 		rootPage: function(other){
 			if(other) console.log('Incorrect URL, tried to reach: '+other);
-			console.log('contracts root');
-			this.moduleMainView.trigger('show');
-			// this.moduleMainView.$el.siblings().hide();
-
-			var contractHome = new ContractViews.Home({
-				parentView: this.moduleMainView
-			});
-			this.swapView(contractHome);
+			this.swapView(new ContractViews.Home());
 		},
 
 		wizardPage: function(){
 			var wizardView = new ContractViews.Wizard({
 				model: new Backbone.Model(),
-				parentView: this.moduleMainView,
 				containerSelector: '.ContractWizardContainer'
 			});
 
@@ -79,17 +66,13 @@ function($, Backbone, ContractModels, ContractViews, BaseModule, Workflows){
 		list: function(page){
 			var contractList = new ContractModels.Contract.Collection();
 			var contractListView = new ContractViews.List({
-				collection: contractList,
-				parentView: this.moduleMainView
+				collection: contractList
 			});
-			var that = this;
-			console.log('contracts list');
-
+			this.swapView(contractListView);
 
 			// var p = page ? parseInt(page, 10) : 1;
 			contractList.fetch({
 				success: function(contracts, response, options){
-					that.swapView(contractListView);
 					contractListView.render();
 				},
 				error: function(contracts, response, options){
@@ -100,15 +83,7 @@ function($, Backbone, ContractModels, ContractViews, BaseModule, Workflows){
 
 		detailsPage: function(id){
 			var contract = new ContractModels.Contract.Model();
-			var contractView = new ContractViews.Detail({
-				model: contract,
-				parentView: this.moduleMainView
-			});
-
-			this.swapView(contractView);
-
-			console.log('contracts details');
-
+			this.swapView(new ContractViews.Detail({ model: contract }));
 			contract.set({_id: parseInt(id, 10)});
 		}
 	});

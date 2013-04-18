@@ -1,22 +1,25 @@
 define([
 	// Libraries
+	'jquery',
+	'underscore',
 	'backbone',
 
 	// Modules
-	'modules/Base',
-	'require'
+	'text!../tpl/ContractListItem.html'
 
 	// Library extensions
 ],
-function(Backbone, BaseModule, relativeRequire){
+function($, _, Backbone, templateHtml){
 
-	var ListItemView = BaseModule.Views.Base.extend({
+	var ListItemView = Backbone.View.extend({
 
-		className: 'ContractListItem',
+		template: _.template(templateHtml),
 
-		_relativeRequire: relativeRequire,
-
-		_templatePath: '../tpl/'
+		render: function(){
+			var data = this.model.toJSON();
+			this.$el.html(this.template(data));
+			return this;
+		}
 
 	});
 

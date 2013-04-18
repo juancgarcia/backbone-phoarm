@@ -4,20 +4,26 @@ define([
 	'backbone',
 
 	// Modules
-	'modules/Base',
-	'require'
+	'text!../tpl/Wizard.html'
+	// 'modules/Base',
+	// 'require'
 
 	// Library extensions
 ],
-function(_, Backbone, BaseModule, relativeRequire){
+function(_, Backbone, templateHtml/*BaseModule, relativeRequire*/){
 
-	var SearchView = BaseModule.Views.Base.extend({
+	// var SearchView = BaseModule.Views.Base.extend({
+	var SearchView = Backbone.View.extend({
 
-		className: 'Wizard',
+		containerSelector: '.ContractWizardContainer',
 
-		_relativeRequire: relativeRequire,
+		// className: 'Wizard',
 
-		_templatePath: '../tpl/',
+		// _relativeRequire: relativeRequire,
+
+		// _templatePath: '../tpl/',
+
+		template: _.template(templateHtml),
 
 		events: {
 			"click button.prev": "prev",
@@ -27,7 +33,7 @@ function(_, Backbone, BaseModule, relativeRequire){
 		},
 
 		initialize: function(args){
-			BaseModule.Views.Base.prototype.initialize.apply(this, arguments);
+			// BaseModule.Views.Base.prototype.initialize.apply(this, arguments);
 			// this.reset();
 		},
 
@@ -56,6 +62,20 @@ function(_, Backbone, BaseModule, relativeRequire){
 			if(state === undefined)
 				state = true;
 			this.$(btnSelector).attr({"disabled":!state});
+		},
+		// swapChild: function(view){
+		// 	if(this.childView) this.childView.off();
+		// 	this.childView = this.showView(view);
+		// },
+		// showView: function(view){
+		// 	this.$(this.containerSelector).append(view.$el);
+		// 	view.setElement(this.$(this.containerSelector)).render();
+		// },
+		render: function(){
+			this.$el.html(this.template());
+			// if(this.childView)
+			// 	this.showView(this.childView);
+			return this;
 		}
 
 	});

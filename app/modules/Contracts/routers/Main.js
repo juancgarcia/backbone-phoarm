@@ -6,13 +6,12 @@ define([
 	// Modules
 	'../models/all',
 	'../views/all',
-	'modules/Base',
 	'../workflows/all',
 
 	// Library extensions
 	'backbone.subroute'
 ],
-function($, Backbone, ContractModels, ContractViews, BaseModule, Workflows){
+function($, Backbone, ContractModels, ContractViews, Workflows){
 
 	var ContractRouter = Backbone.SubRoute.extend({
 		routes: {

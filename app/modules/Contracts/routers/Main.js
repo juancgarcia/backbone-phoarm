@@ -4,7 +4,7 @@ define([
 	'backbone',
 
 	// Modules
-	'../models/Contract',
+	'../models/all',
 	'../views/all',
 	'modules/Base',
 	'../workflows/all',
@@ -12,7 +12,7 @@ define([
 	// Library extensions
 	'backbone.subroute'
 ],
-function($, Backbone, Contracts, ContractViews, BaseModule, Workflows){
+function($, Backbone, ContractModels, ContractViews, BaseModule, Workflows){
 
 	var ContractRouter = Backbone.SubRoute.extend({
 		routes: {
@@ -77,7 +77,7 @@ function($, Backbone, Contracts, ContractViews, BaseModule, Workflows){
 		},
 
 		list: function(page){
-			var contractList = new Contracts.Collection();
+			var contractList = new ContractModels.Contract.Collection();
 			var contractListView = new ContractViews.List({
 				collection: contractList,
 				parentView: this.moduleMainView
@@ -99,7 +99,7 @@ function($, Backbone, Contracts, ContractViews, BaseModule, Workflows){
 		},
 
 		detailsPage: function(id){
-			var contract = new Contracts.Model();
+			var contract = new ContractModels.Contract.Model();
 			var contractView = new ContractViews.Detail({
 				model: contract,
 				parentView: this.moduleMainView

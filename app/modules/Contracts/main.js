@@ -15,7 +15,7 @@ function(_, ContractRouter, ContractModels, ContractViews){
 		routePath: "contracts",
 		createTrailingSlashRoutes: true
 	};
-	
+
 	var ContractModule = {};
 	ContractModule.Models = ContractModels;
 	ContractModule.Router = ContractRouter;

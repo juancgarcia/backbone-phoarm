@@ -59,16 +59,6 @@ function($, Backbone, Contracts, ContractViews, BaseModule, Workflows){
 			this.swapView(contractHome);
 		},
 
-		searchPage: function(){
-			var contractSearchView = new ContractViews.Search({
-				parentView: this.moduleMainView
-			});
-
-			this.swapView(contractSearchView);
-
-			console.log('contracts search');
-		},
-
 		wizardPage: function(){
 			var wizardView = new ContractViews.Wizard({
 				model: new Backbone.Model(),

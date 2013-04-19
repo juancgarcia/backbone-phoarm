@@ -1,15 +1,19 @@
 define([
 	// Libraries
+	'jquery',
+	'underscore',
 	'backbone',
 
 	// Modules
+	'../views/WizardForm'
 
 	// Library extensions
-	'backbone.forms'
 ],
-function(Backbone){
+function($, _, Backbone, WizardForm){
 
-	var SearchForm = Backbone.Form.extend({
+	var SearchForm = WizardForm.extend({
+
+		serviceUrl: 'http://localhost:8000/data/products.nested1.json',
 
 		schema: {
 			vin: 'Text',
@@ -17,21 +21,7 @@ function(Backbone){
 			mileage: 'Number',
 			condition: { type: 'Select', options: ['new', 'used'] },
 			"saleDate": 'Date'
-		},
-		send: function(){
-			var form = this;
-			$.ajax({
-				url: 'http://localhost:8000/data/products.nested1.json'
-			}).done(function(data, textStatus, jqXHR){
-				form.succeeded(data, textStatus, jqXHR);
-			}).fail(function(jqXHR, textStatus, errorThrown) {
-				form.failed(jqXHR, textStatus, errorThrown);
-			});
-		},
-		// placeholders
-		failed: function(){},
-		succeeded: function(){}
-
+		}
 	});
 
 	return SearchForm;

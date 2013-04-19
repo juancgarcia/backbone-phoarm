@@ -4,15 +4,14 @@ define([
 	'backbone',
 
 	// Modules
-	'../models/Contract',
+	'../models/all',
 	'../views/all',
-	'modules/Base',
 	'../workflows/all',
 
 	// Library extensions
 	'backbone.subroute'
 ],
-function($, Backbone, Contracts, ContractViews, BaseModule, Workflows){
+function($, Backbone, ContractModels, ContractViews, Workflows){
 
 	var ContractRouter = Backbone.SubRoute.extend({
 		routes: {
@@ -30,75 +29,49 @@ function($, Backbone, Contracts, ContractViews, BaseModule, Workflows){
 			that.moduleMainSelector = options.moduleMainSelector || '.moduleContractMain';
 			that.parentView = options.parentView || undefined;
 
-			that.moduleMainView = new ContractViews.Master({
-				containerSelector: that.moduleMainSelector,
-				parentView: that.parentView,
-				loadTemplate:true
-			});
+			that.moduleMainView = new ContractViews.Master().render();
 
 			that.currentView = null;
 		},
 
 		swapView: function(view){
-			if(this.currentView){
-				this.currentView.remove();
-			}
+			if(this.currentView) this.currentView.off();
 			this.currentView = view.trigger('show');
+			this.moduleMainView.setElement($(this.containerSelector)).render();
+			view.setElement($(this.moduleMainSelector)).render();
 		},
 
 		rootPage: function(other){
 			if(other) console.log('Incorrect URL, tried to reach: '+other);
-			console.log('contracts root');
-			this.moduleMainView.trigger('show');
-			this.moduleMainView.$el.siblings().hide();
-
-			var contractHome = new ContractViews.Home({
-				parentView: this.moduleMainView
-			});
-			this.swapView(contractHome);
-		},
-
-		searchPage: function(){
-			var contractSearchView = new ContractViews.Search({
-				parentView: this.moduleMainView
-			});
-
-			this.swapView(contractSearchView);
-
-			console.log('contracts search');
+			this.swapView(new ContractViews.Home());
 		},
 
 		wizardPage: function(){
 			var wizardView = new ContractViews.Wizard({
 				model: new Backbone.Model(),
-				parentView: this.moduleMainView,
 				containerSelector: '.ContractWizardContainer'
 			});
+
+			this.swapView(wizardView);
 
 			new Workflows.Manager({
 				wrapper: wizardView,
 				states: Workflows.NewContractWorkflowStates
 			});
 
-			this.swapView(wizardView);
-
 			console.log('new contract wizard');
 		},
 
 		list: function(page){
-			var contractList = new Contracts.Collection();
+			var contractList = new ContractModels.Contract.Collection();
 			var contractListView = new ContractViews.List({
-				collection: contractList,
-				parentView: this.moduleMainView
+				collection: contractList
 			});
-			var that = this;
-			console.log('contracts list');
-
+			this.swapView(contractListView);
 
 			// var p = page ? parseInt(page, 10) : 1;
 			contractList.fetch({
 				success: function(contracts, response, options){
-					that.swapView(contractListView);
 					contractListView.render();
 				},
 				error: function(contracts, response, options){
@@ -108,16 +81,8 @@ function($, Backbone, Contracts, ContractViews, BaseModule, Workflows){
 		},
 
 		detailsPage: function(id){
-			var contract = new Contracts.Model();
-			var contractView = new ContractViews.Detail({
-				model: contract,
-				parentView: this.moduleMainView
-			});
-
-			this.swapView(contractView);
-
-			console.log('contracts details');
-
+			var contract = new ContractModels.Contract.Model();
+			this.swapView(new ContractViews.Detail({ model: contract }));
 			contract.set({_id: parseInt(id, 10)});
 		}
 	});

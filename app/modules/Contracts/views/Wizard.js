@@ -4,31 +4,23 @@ define([
 	'backbone',
 
 	// Modules
-	'modules/Base',
-	'require'
+	'text!../tpl/Wizard.html'
 
 	// Library extensions
 ],
-function(_, Backbone, BaseModule, relativeRequire){
+function(_, Backbone, templateHtml){
 
-	var SearchView = BaseModule.Views.Base.extend({
+	var SearchView = Backbone.View.extend({
 
-		className: 'Wizard',
+		containerSelector: '.ContractWizardContainer',
 
-		_relativeRequire: relativeRequire,
-
-		_templatePath: '../tpl/',
+		template: _.template(templateHtml),
 
 		events: {
 			"click button.prev": "prev",
 			"click button.next": "next",
 			"click button.reset": "reset",
 			"click button.submit": "submit"
-		},
-
-		initialize: function(args){
-			BaseModule.Views.Base.prototype.initialize.apply(this, arguments);
-			// this.reset();
 		},
 
 		prev: function(){
@@ -44,18 +36,35 @@ function(_, Backbone, BaseModule, relativeRequire){
 			this.trigger('submit');
 		},
 		setButtonState: function(options){
+			options = options || this.btnState || {};
 			if(_.isString(options))
 				_setIndividualButtonState.apply(this, arguments);
 			else
 				_.each(options, function(state, key, list){
-					var selector = 'button.'+key;
-					this._setIndividualButtonState(selector, state);
+					this._setIndividualButtonState(key, state);
 				}, this);
 		},
-		_setIndividualButtonState: function(btnSelector, state){
-			if(state === undefined)
-				state = true;
+		_setIndividualButtonState: function(key, state){
+			if(state === void 0) state = true;
+			var btnSelector = 'button.'+key,
+				currBtn = {}; currBtn[key] = state;
+			if(this.btnState === void 0) this.btnState = {};
+			_.extend(this.btnState, currBtn);
 			this.$(btnSelector).attr({"disabled":!state});
+		},
+		swapChild: function(view){
+			if(this.childView) this.childView.off().remove();
+			this.childView = this.showView(view);
+		},
+		showView: function(view){
+			return view.setElement(this.$(this.containerSelector)).render();
+		},
+		render: function(){
+			this.$el.html(this.template());
+			this.setButtonState();
+			if(this.childView)
+				this.showView(this.childView);
+			return this;
 		}
 
 	});

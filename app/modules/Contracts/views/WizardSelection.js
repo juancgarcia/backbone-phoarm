@@ -1,30 +1,22 @@
 define([
 	// Libraries
+	'jquery',
+	'underscore',
 	'backbone',
 
 	// Modules
+	'../views/WizardForm'
 
 	// Library extensions
-	'backbone.forms'
 ],
-function(Backbone){
+function($, _, Backbone, WizardForm){
 
-	var SelectionForm = Backbone.Form.extend({
+	var SelectionForm = WizardForm.extend({
 
-		send: function(){
-			var form = this;
-			$.ajax({
-				url: 'http://localhost:8000/data/detail-all.json'
-			}).done(function(data, textStatus, jqXHR){
-				form.succeeded(data, textStatus, jqXHR);
-			}).fail(function(jqXHR, textStatus, errorThrown) {
-				form.failed(jqXHR, textStatus, errorThrown);
-			});
-		},
-		// placeholders
-		failed: function(){},
-		succeeded: function(){}
+		serviveUrl: 'http://localhost:8000/data/products.nested1.json',
 
+		schema: {
+		}
 	});
 
 	return SelectionForm;

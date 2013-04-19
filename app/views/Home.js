@@ -1,17 +1,24 @@
 define([
 	// Libraries
 	'jquery',
+	'underscore',
 	'backbone',
 
 	// Modules
-	'modules/Base'
+	'text!../tpl/Home.html'
 
 	// Library extensions
 ],
-function($, Backbone, BaseModule){
+function($, _, Backbone, templateHtml){
 
-	var HomeView = BaseModule.Views.Base.extend({
-		className: 'Home'
+	var HomeView = Backbone.View.extend({
+
+		template: _.template(templateHtml),
+
+		render: function(){
+			this.$el.html(this.template());
+			return this;
+		}
 	});
 
 	return HomeView;

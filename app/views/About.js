@@ -1,17 +1,24 @@
 define([
 	// Libraries
 	'jquery',
+	'underscore',
 	'backbone',
 
 	// Modules
-	'modules/Base'
+	'text!../tpl/About.html'
 
 	// Library extensions
 ],
-function($, Backbone, BaseModule){
+function($, _, Backbone, templateHtml){
 
-	var AboutView = BaseModule.Views.Base.extend({
-		className: 'About'
+	var AboutView = Backbone.View.extend({
+
+		template: _.template(templateHtml),
+
+		render: function(){
+			this.$el.html(this.template());
+			return this;
+		}
 	});
 
 	return AboutView;

@@ -1,22 +1,24 @@
 define([
 	// Libraries
+	'jquery',
+	'underscore',
 	'backbone',
 
 	// Modules
-	'modules/Base',
-	'require'
+	'text!../tpl/ContractMaster.html'
 
 	// Library extensions
 ],
-function(Backbone, BaseModule, relativeRequire){
+function($, _, Backbone, templateHtml){
 
-	var MasterView = BaseModule.Views.Base.extend({
+	var MasterView = Backbone.View.extend({
 
-		className: 'ContractMaster',
+		template: _.template(templateHtml),
 
-		_relativeRequire: relativeRequire,
-
-		_templatePath: '../tpl/'
+		render: function(){
+			this.$el.html(this.template());
+			return this;
+		}
 
 	});
 

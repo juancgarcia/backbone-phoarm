@@ -1,18 +1,24 @@
 define([
 	// Libraries
 	'jquery',
+	'underscore',
 	'backbone',
 
 	// Modules
-	'modules/Base'
+	'text!../tpl/Header.html'
 
 	// Library extensions
 ],
-function($, Backbone, BaseModule){
+function($, _, Backbone, templateHtml){
 
-	var HeaderView = BaseModule.Views.Base.extend({
+	var HeaderView = Backbone.View.extend({
 
-		className: 'Header',
+		template: _.template(templateHtml),
+
+		render: function(){
+			this.$el.html(this.template());
+			return this;
+		},
 
 		selectMenuItem: function (menuItem) {
 			$('.nav li').removeClass('active');

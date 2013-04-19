@@ -1,22 +1,17 @@
 define([
 	// Libraries
+	'jquery',
+	'underscore',
 	'backbone',
 
 	// Modules
-	'modules/Base',
-	'require'
+	'text!../tpl/ContractDetail.html'
 
 	// Library extensions
 ],
-function(Backbone, BaseModule, relativeRequire){
+function($, _, Backbone, templateHtml){
 
-	var DetailView = BaseModule.Views.Base.extend({
-
-		className: 'ContractDetail',
-
-		_relativeRequire: relativeRequire,
-
-		_templatePath: '../tpl/',
+	var DetailView = Backbone.View.extend({
 
 		initialize: function(){
 			var theView = this;
@@ -27,7 +22,14 @@ function(Backbone, BaseModule, relativeRequire){
 					}
 				});
 			}, this);
-			BaseModule.Views.Base.prototype.initialize.apply(this, arguments);
+		},
+
+		template: _.template(templateHtml),
+
+		render: function(){
+			var data = this.model.toJSON();
+			this.$el.html(this.template(data));
+			return this;
 		}
 
 	});

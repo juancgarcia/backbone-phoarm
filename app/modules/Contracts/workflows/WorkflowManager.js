@@ -32,17 +32,7 @@ function($, _, Backbone, ContractViews){
 			.on("submit", workflow.submit, workflow)
 			.on("reset", workflow.reset, workflow);
 
-
-		var kickStart = function(){
-				workflow.reset();
-				wizard.off('rendered', kickStart);
-			};
-		if(wizard.rendered){
-			kickStart();
-		} else {
-			wizard.on('rendered', kickStart);
-			if(!wizard.rendering) wizard.render();
-		}
+		workflow.reset();
 	};
 
 	// button handlers
@@ -97,11 +87,9 @@ function($, _, Backbone, ContractViews){
 				// optionally extract data out of form
 				workflow.currentForm.commit();
 				var formData = workflow.currentForm.model.toJSON();
-				console.log('step: '+JSON.stringify(formData));
 
 				// save step data to wizard
 				workflow.wizardData.set(formData);
-				console.log('Wizard Data: '+JSON.stringify(workflow.wizardData.toJSON()));
 
 				callback();
 			};
@@ -129,11 +117,9 @@ function($, _, Backbone, ContractViews){
 				// optionally extract data out of form
 				workflow.currentForm.commit();
 				var formData = workflow.currentForm.model.toJSON();
-				console.log('step: '+JSON.stringify(formData));
 
 				// save step data to wizard
 				workflow.wizardData.set(formData);
-				console.log('Wizard Data: '+JSON.stringify(workflow.wizardData.toJSON()));
 
 				// workflow.currentForm.trigger("complete");
 				workflow.next();
@@ -143,8 +129,6 @@ function($, _, Backbone, ContractViews){
 			workflow.currentForm.succeeded = function(data){
 				workflow.serverResponse.reset(data)/*.clear()*/;
 				//workflow.serverResponse.set(data);
-				// console.log('Incoming Data: '+JSON.stringify(data));
-				// console.log('Nexted Data: '+JSON.stringify(workflow.serverResponse.toJSON()));
 
 				this.trigger('complete');
 			};
@@ -158,18 +142,7 @@ function($, _, Backbone, ContractViews){
 	};
 
 	WorkflowManager.prototype.setButtons = function(state){
-		var wizard = this.wrapper,
-			assignState = function(){
-				wizard.setButtonState(state);
-				wizard.off('rendered', assignState);
-			};
-
-		if(wizard.rendered){
-			assignState();
-		} else {
-			wizard.on('rendered', assignState);
-			if(!wizard.rendering) wizard.render();
-		}
+		this.wrapper.setButtonState(state);
 	};
 
 	// Accessors/Helpers for handling the states DS
@@ -207,9 +180,6 @@ function($, _, Backbone, ContractViews){
 	};
 
 	// Backbone.View related helpers
-	WorkflowManager.prototype.getContainer = function(){
-		return this.wrapper.getManagedRegion$El();
-	};
 	WorkflowManager.prototype.getForm = function(classConstructor, modelConstructor){
 		var model, data = this.serverResponse.toJSON() || {};
 
@@ -221,11 +191,7 @@ function($, _, Backbone, ContractViews){
 		var form = new classConstructor({
 			model: model
 		});
-		form.on("complete", function(){
-			this.off().remove();
-		});
-		form.render();
-		this.getContainer().html(form.el);
+		this.wrapper.swapChild(form);
 		this.currentForm = form;
 		return form;
 	};

@@ -53,7 +53,7 @@ function(_, Backbone, templateHtml){
 			this.$(btnSelector).attr({"disabled":!state});
 		},
 		swapChild: function(view){
-			if(this.childView) this.childView.off();
+			if(this.childView) this.childView.off().remove();
 			this.childView = this.showView(view);
 		},
 		showView: function(view){

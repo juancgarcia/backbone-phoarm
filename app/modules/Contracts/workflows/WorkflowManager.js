@@ -87,11 +87,9 @@ function($, _, Backbone, ContractViews){
 				// optionally extract data out of form
 				workflow.currentForm.commit();
 				var formData = workflow.currentForm.model.toJSON();
-				console.log('step: '+JSON.stringify(formData));
 
 				// save step data to wizard
 				workflow.wizardData.set(formData);
-				console.log('Wizard Data: '+JSON.stringify(workflow.wizardData.toJSON()));
 
 				callback();
 			};
@@ -119,11 +117,9 @@ function($, _, Backbone, ContractViews){
 				// optionally extract data out of form
 				workflow.currentForm.commit();
 				var formData = workflow.currentForm.model.toJSON();
-				console.log('step: '+JSON.stringify(formData));
 
 				// save step data to wizard
 				workflow.wizardData.set(formData);
-				console.log('Wizard Data: '+JSON.stringify(workflow.wizardData.toJSON()));
 
 				// workflow.currentForm.trigger("complete");
 				workflow.next();
@@ -133,8 +129,6 @@ function($, _, Backbone, ContractViews){
 			workflow.currentForm.succeeded = function(data){
 				workflow.serverResponse.reset(data)/*.clear()*/;
 				//workflow.serverResponse.set(data);
-				// console.log('Incoming Data: '+JSON.stringify(data));
-				// console.log('Nexted Data: '+JSON.stringify(workflow.serverResponse.toJSON()));
 
 				this.trigger('complete');
 			};
@@ -196,9 +190,6 @@ function($, _, Backbone, ContractViews){
 
 		var form = new classConstructor({
 			model: model
-		});
-		form.on("complete", function(){
-			this.off().remove();
 		});
 		this.wrapper.swapChild(form);
 		this.currentForm = form;

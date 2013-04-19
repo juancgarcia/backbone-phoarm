@@ -8,6 +8,7 @@ define([
 	'./ContractList',
 	'./ContractListItem',
 	'./Wizard',
+	'./WizardForm',
 	'./WizardSearch',
 	'./WizardSelection',
 	'./WizardOptions',
@@ -16,7 +17,7 @@ define([
 	// Library extensions
 ],
 function(MasterView, HomeView, DetailView, ListView, ListItemView,
-	Wiz, WizSearch, WizSelection, WizOptions, WizCustomer){
+	Wiz, WizForm, WizSearch, WizSelection, WizOptions, WizCustomer){
 	var Views = {};
 
 	Views.Master = MasterView;
@@ -25,6 +26,7 @@ function(MasterView, HomeView, DetailView, ListView, ListItemView,
 	Views.List = ListView;
 	Views.ListItem = ListItemView;
 	Views.Wizard = Wiz;
+	Views.WizardForm = WizForm;
 	Views.WizardSearch = WizSearch;
 	Views.WizardSelection = WizSelection;
 	Views.WizardOptions = WizOptions;

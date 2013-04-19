@@ -52,12 +52,12 @@ function($, Backbone, ContractModels, ContractViews, Workflows){
 				containerSelector: '.ContractWizardContainer'
 			});
 
+			this.swapView(wizardView);
+
 			new Workflows.Manager({
 				wrapper: wizardView,
 				states: Workflows.NewContractWorkflowStates
 			});
-
-			this.swapView(wizardView);
 
 			console.log('new contract wizard');
 		},

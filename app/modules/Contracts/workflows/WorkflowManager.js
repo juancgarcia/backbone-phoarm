@@ -32,18 +32,7 @@ function($, _, Backbone, ContractViews){
 			.on("submit", workflow.submit, workflow)
 			.on("reset", workflow.reset, workflow);
 
-
-		var kickStart = function(){
-				workflow.reset();
-				// wizard.render();
-				// wizard.off('rendered', kickStart);
-			};
-		// if(wizard.rendered){
-			kickStart();
-		// } else {
-		// 	wizard.on('rendered', kickStart);
-		// 	if(!wizard.rendering) wizard.render();
-		// }
+		workflow.reset();
 	};
 
 	// button handlers
@@ -159,18 +148,7 @@ function($, _, Backbone, ContractViews){
 	};
 
 	WorkflowManager.prototype.setButtons = function(state){
-		var wizard = this.wrapper,
-			assignState = function(){
-				wizard.setButtonState(state);
-				wizard.off('rendered', assignState);
-			};
-
-		if(wizard.rendered){
-			assignState();
-		} else {
-			wizard.on('rendered', assignState);
-			if(!wizard.rendering) wizard.render();
-		}
+		this.wrapper.setButtonState(state);
 	};
 
 	// Accessors/Helpers for handling the states DS
@@ -208,10 +186,6 @@ function($, _, Backbone, ContractViews){
 	};
 
 	// Backbone.View related helpers
-	// WorkflowManager.prototype.getContainer = function(){
-	// 	// return this.wrapper.getManagedRegion$El();
-	// 	return $(this.wrapper.containerSelector);
-	// };
 	WorkflowManager.prototype.getForm = function(classConstructor, modelConstructor){
 		var model, data = this.serverResponse.toJSON() || {};
 
@@ -226,11 +200,7 @@ function($, _, Backbone, ContractViews){
 		form.on("complete", function(){
 			this.off().remove();
 		});
-		// form.render();
-		// this.getContainer().html(form.el);
-		// this.wrapper.swapChild(form);
-		var selector = this.wrapper.containerSelector;
-		form.setElement(this.wrapper.$(selector)).render();
+		this.wrapper.swapChild(form);
 		this.currentForm = form;
 		return form;
 	};

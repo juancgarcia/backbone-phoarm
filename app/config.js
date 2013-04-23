@@ -30,7 +30,6 @@ require.config({
 		}
 	},
 	'packages': [
-		'modules/Base',
 		'modules/Contracts'
 	]
 });

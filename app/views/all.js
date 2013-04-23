@@ -5,19 +5,17 @@ define([
 	'./Header',
 	'./Home',
 	'./List',
-	'./About',
-	'./Wrapper'
+	'./About'
 
 	// Library extensions
 ],
-function(HeaderView, HomeView, ListView, AboutView, WrapperView){
+function(HeaderView, HomeView, ListView, AboutView){
 	var Views = {};
 
 	Views.Header = HeaderView;
 	Views.Home = HomeView;
 	Views.List = ListView;
 	Views.About = AboutView;
-	Views.Wrapper = WrapperView;
 
-	return Views;	
+	return Views;
 });

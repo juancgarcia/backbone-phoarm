@@ -1,3 +1,0 @@
-[submodule "app/modules/Base"]
-	path = app/modules/Base
-	url = git@github.com:juancgarcia/backbone-baseModule.git

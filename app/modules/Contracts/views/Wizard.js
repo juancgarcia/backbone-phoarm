@@ -57,7 +57,9 @@ function(_, Backbone, templateHtml){
 			this.childView = this.showView(view);
 		},
 		showView: function(view){
-			return view.setElement(this.$(this.containerSelector)).render();
+			if(view && view instanceof Backbone.View)
+				view.setElement(this.$(this.containerSelector)).render();
+			return view;
 		},
 		render: function(){
 			this.$el.html(this.template());

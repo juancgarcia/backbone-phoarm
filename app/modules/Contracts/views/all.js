@@ -8,16 +8,12 @@ define([
 	'./ContractList',
 	'./ContractListItem',
 	'./Wizard',
-	'./WizardForm',
-	'./WizardSearch',
-	'./WizardSelection',
-	'./WizardOptions',
-	'./WizardCustomer'
+	'./WizardForm'
 
 	// Library extensions
 ],
 function(MasterView, HomeView, DetailView, ListView, ListItemView,
-	Wiz, WizForm, WizSearch, WizSelection, WizOptions, WizCustomer){
+	WizardView, WizardForm){
 	var Views = {};
 
 	Views.Master = MasterView;
@@ -25,12 +21,8 @@ function(MasterView, HomeView, DetailView, ListView, ListItemView,
 	Views.Detail = DetailView;
 	Views.List = ListView;
 	Views.ListItem = ListItemView;
-	Views.Wizard = Wiz;
-	Views.WizardForm = WizForm;
-	Views.WizardSearch = WizSearch;
-	Views.WizardSelection = WizSelection;
-	Views.WizardOptions = WizOptions;
-	Views.WizardCustomer = WizCustomer;
+	Views.Wizard = WizardView;
+	Views.WizardForm = WizardForm;
 
 	return Views;
 });

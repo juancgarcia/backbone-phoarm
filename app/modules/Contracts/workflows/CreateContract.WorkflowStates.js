@@ -5,16 +5,21 @@ define([
 	'backbone',
 
 	// Modules
-	'../views/all'
+	'../views/all',
+	'../models/all'
 
 	// Library extensions
 ],
-function($, _, Backbone, ContractViews){
+function($, _, Backbone, ContractViews, ContractModels){
 	states = {
 		'startSearch': {
 			'action': function(){
 				var workflow = this,
-					search = workflow.getForm(ContractViews.WizardSearch);
+					search = new ContractViews.WizardForm({
+						model: new ContractModels.VehicleValidator.Model(),
+						serviceUrl: '/data/vehicleSearchResponse.json'
+					});
+				workflow.setForm(search);
 			},
 			'prev': void 0,
 			'next': 'startProduct'
@@ -22,11 +27,11 @@ function($, _, Backbone, ContractViews){
 		'startProduct': {
 			'action': function(){
 				var workflow = this,
-					product = workflow.getForm(
-						ContractViews.WizardSelection,
-						Backbone.Model.extend({schema:{
-							product: {type: /*'Radio'*/ 'Select', options: workflow.serverResponse.toJSON()}
-						}}));
+					product = new ContractViews.WizardForm({
+						model: new ContractModels.Product.Select(),
+						serviceUrl: 'http://localhost:8000/data/products.nested1.json'
+					});
+				workflow.setForm(product);
 			},
 			'prev': 'startSearch',
 			'next': 'startOption'
@@ -34,7 +39,17 @@ function($, _, Backbone, ContractViews){
 		'startOption':{
 			'action': function(){
 				var workflow = this,
-					option = workflow.getForm(ContractViews.WizardOptions);
+					option = new ContractViews.WizardForm({
+						model: new Backbone.Model(),
+						serviceUrl: 'http://localhost:8000/data/products.nested1.json',
+						schema: {
+							option: {
+								type: 'Select',
+								options: ['A', 'B', 'C']
+							}
+						}
+					});
+				workflow.setForm(option);
 			},
 			'prev': 'startProduct',
 			'next': 'startCustomer'
@@ -42,7 +57,11 @@ function($, _, Backbone, ContractViews){
 		'startCustomer':{
 			'action': function(){
 				var workflow = this,
-					customer = workflow.getForm(ContractViews.WizardCustomer);
+					customer = new ContractViews.WizardForm({
+						model: new ContractModels.Customer.Model(),
+						serviceUrl: 'http://localhost:8000/data/products.nested1.json'
+					});
+				workflow.setForm(customer);
 			},
 			'prev': 'startOption',
 			'next': 'finalState'
@@ -50,9 +69,13 @@ function($, _, Backbone, ContractViews){
 		'submitContract': {
 			'action': function(){
 				var workflow = this,
-					finalStep = workflow.getForm(Backbone.View.extend({
+					form = Backbone.View.extend({
 						template: _.template('<div><h3>Completed!</h3></div>')
-					}));
+					}),
+					finalStep = new form({
+						model: new Backbone.Model()
+					});
+				workflow.setForm(finalStep);
 
 				console.log('Contract Submission goes here');
 				// auto-submit the details

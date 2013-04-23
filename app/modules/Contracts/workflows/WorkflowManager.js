@@ -85,11 +85,15 @@ function($, _, Backbone, ContractViews){
 			onFormComplete = function(){
 				workflow.currentForm.off('complete', onFormComplete);
 				// optionally extract data out of form
+				console.log(workflow.currentForm.model.toJSON());
 				workflow.currentForm.commit();
+				console.log(workflow.currentForm.model.toJSON());
 				var formData = workflow.currentForm.model.toJSON();
 
 				// save step data to wizard
 				workflow.wizardData.set(formData);
+				// console.log(JSON.stringify(workflow.wizardData.toJSON()));
+				workflow.unsetForm();
 
 				callback();
 			};
@@ -180,20 +184,16 @@ function($, _, Backbone, ContractViews){
 	};
 
 	// Backbone.View related helpers
-	WorkflowManager.prototype.getForm = function(classConstructor, modelConstructor){
-		var model, data = this.serverResponse.toJSON() || {};
-
-		if(modelConstructor)
-			model = new modelConstructor(/*data*/);
-		else
-			model = new Backbone.Model(/*data*/);
-
-		var form = new classConstructor({
-			model: model
-		});
+	WorkflowManager.prototype.setForm = function(form){
+		var data = this.serverResponse.toJSON() || {};
+		// form.model.set(data);
+		if(form.setExtras) form.setExtras({preFetch: data});
 		this.wrapper.swapChild(form);
 		this.currentForm = form;
 		return form;
+	};
+	WorkflowManager.prototype.unsetForm = function(){
+		this.wrapper.swapChild(null);
 	};
 
 	return WorkflowManager;

@@ -12,11 +12,14 @@ define([
 function($, _, Backbone, StatesJSON){
 	var Address = Backbone.Model.extend({
 		schema: {
-			line1: 'Text',
+			line1: { type: 'Text', validators: ['required'] },
 			line2: 'Text',
-			city: { type: 'Text' },
-			state: { type: 'Select', options: JSON.parse(StatesJSON) },
-			zip: { type: 'Number' }
+			city: { type: 'Text', validators: ['required'] },
+			state: { type: 'Select', options: JSON.parse(StatesJSON), validators: ['required'] },
+			zip: { type: 'Text', validators: [
+				'required',
+				/^[0-9]{5}([- ]?[0-9]{4})?$/
+				] }
 		}
 	}),
 	Addresses = Backbone.Collection.extend({
@@ -25,8 +28,11 @@ function($, _, Backbone, StatesJSON){
 
 	var Customer = Backbone.Model.extend({
 		schema: {
-			name: 'Text',
-			phone: { type: 'Text'/*, validators: ['required', 'email']*/ },
+			name: { type:'Text', validators: ['required'] },
+			phone: { type: 'Text', validators: [
+				'required',
+				/^(\(?[0-9]{3}\)?([. ]?))?[0-9]{3}[-. ]?[0-9]{4}$/
+				] },
 			address: { type: 'NestedModel', model: Address }
 		}
 	}),

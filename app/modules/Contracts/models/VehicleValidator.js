@@ -6,18 +6,10 @@ define([
 	// Modules
 
 	// Library Extensions
-	// 'backbone.localStorage'
 ],
 function(_, Backbone){
 
 	var VehicleValidator = Backbone.Model.extend({
-		schema: {
-			vin: 'Text',
-			stock: 'Text',
-			mileage: 'Number',
-			condition: { type: 'Select', options: ['new', 'used'] },
-			"saleDate": 'Date'
-		}/*,
 		defaults: {
 			vin: '',
 			stock: '',
@@ -25,21 +17,13 @@ function(_, Backbone){
 			condition: 'used',
 			saleDate: 0
 		},
-		url :'/data/contracts.json',
-		parse : function(response){
-			// for testing with static JSON
-			var obj = _.find(response, function(contract){
-				if(!contract || isNaN(parseInt(contract._id, 10)) )
-					return false;
-				return contract._id == this.get('_id');
-			}, this);
-			return obj;
-		},
-		validate: function(attrs){
-			if( _.isEmpty(attrs.title)){
-				return "Missing Title";
-			}
-		}*/
+		schema: {
+			vin: { type:'Text', validators: ['required'] },
+			stock: { type:'Text', validators: ['required'] },
+			mileage: { type: 'Number', validators: ['required'] },
+			condition: { type: 'Select', options: ['new', 'used'], validators: ['required'] },
+			"saleDate": { type: 'Date', validators: ['required'] }
+		}
 	});
 
 	var VehicleValidators = Backbone.Collection.extend({
@@ -47,16 +31,7 @@ function(_, Backbone){
 			model: VehicleValidator
 		},
 		url: '/data/contracts.json',
-		Model: VehicleValidator/*,
-		completed: function(){
-			return this.where({completed: true});
-		},
-		remaining: function(){
-			return this.where({completed: false});
-		},
-		comparator: function(model){
-			return model.get('timestamp');
-		}*/
+		Model: VehicleValidator
 	});
 
 	return {

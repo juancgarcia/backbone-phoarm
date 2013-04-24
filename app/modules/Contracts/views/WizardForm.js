@@ -13,13 +13,12 @@ function($, _, Backbone){
 
 	var Form = Backbone.Form.extend({
 		serviceUrl: '',
-		preFetch: null,
 		initialize: function(options){
 			this.setExtras(options);
 			Backbone.Form.prototype.initialize(options);
 		},
 		setExtras: function(options){
-			_.extend(this, _.pick(options, 'serviceUrl', 'preFetch'));
+			_.extend(this, _.pick(options, 'serviceUrl'));
 			return this;
 		},
 		render: function(){
@@ -33,7 +32,11 @@ function($, _, Backbone){
 			$.ajax({
 				url: form.serviceUrl
 			}).done(function(data, textStatus, jqXHR){
-				form.succeeded(data, textStatus, jqXHR);
+				if(data.validation && data.validation.success){
+					form.succeeded(data, textStatus, jqXHR);
+				} else {
+					form.failed();
+				}
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 				form.failed(jqXHR, textStatus, errorThrown);
 			});

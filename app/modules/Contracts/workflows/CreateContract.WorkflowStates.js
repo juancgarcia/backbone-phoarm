@@ -16,8 +16,10 @@ function($, _, Backbone, ContractViews, ContractModels){
 			'action': function(){
 				var workflow = this,
 					search = new ContractViews.WizardForm({
-						model: new ContractModels.VehicleValidator.Model(),
-						serviceUrl: '/data/vehicleSearchResponse.json'
+						model: new ContractModels.VehicleValidator.Model(
+								workflow.wizardData.toJSON() || {}
+							),
+						serviceUrl: '/data/vehicleValidatorResponse.json'
 					});
 				workflow.setForm(search);
 			},
@@ -28,8 +30,18 @@ function($, _, Backbone, ContractViews, ContractModels){
 			'action': function(){
 				var workflow = this,
 					product = new ContractViews.WizardForm({
-						model: new ContractModels.Product.Select(),
-						serviceUrl: 'http://localhost:8000/data/products.nested1.json'
+						model: new ContractModels.Product.Select(
+								_.extend(
+									{
+										getOptions: function(callback, editor){
+											var data = workflow.getResponse().data,
+												model = new ContractModels.Product.Collection(data);
+											callback(model);
+										}
+									},
+									workflow.wizardData.toJSON() || {}
+								)),
+						serviceUrl: '/data/formResponse.json'
 					});
 				workflow.setForm(product);
 			},
@@ -40,8 +52,10 @@ function($, _, Backbone, ContractViews, ContractModels){
 			'action': function(){
 				var workflow = this,
 					option = new ContractViews.WizardForm({
-						model: new Backbone.Model(),
-						serviceUrl: 'http://localhost:8000/data/products.nested1.json',
+						model: new Backbone.Model(
+								workflow.wizardData.toJSON() || {}
+							),
+						serviceUrl: '/data/formResponse.json',
 						schema: {
 							option: {
 								type: 'Select',
@@ -58,8 +72,10 @@ function($, _, Backbone, ContractViews, ContractModels){
 			'action': function(){
 				var workflow = this,
 					customer = new ContractViews.WizardForm({
-						model: new ContractModels.Customer.Model(),
-						serviceUrl: 'http://localhost:8000/data/products.nested1.json'
+						model: new ContractModels.Customer.Model(
+								workflow.wizardData.toJSON() || {}
+							),
+						serviceUrl: '/data/formResponse.json'
 					});
 				workflow.setForm(customer);
 			},

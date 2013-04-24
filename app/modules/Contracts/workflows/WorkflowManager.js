@@ -20,7 +20,6 @@ function($, _, Backbone, ContractViews){
 
 	WorkflowManager.prototype.initialize = function(){
 		this.wizardData = new Backbone.Model();
-		this.serverResponse = new (Backbone.Collection.extend({ model: Backbone.Model }))()/*new Backbone.Model()*/;
 
 		var workflow = this,
 			wizard = this.wrapper,
@@ -65,7 +64,9 @@ function($, _, Backbone, ContractViews){
 	};
 	WorkflowManager.prototype.reset = function(){
 		this.wizardData.clear();
-		this.serverResponse.reset();
+		_.each(this.states, function(state){
+			state.response = void 0;
+		});
 		this.triggerState('initialState');
 	};
 
@@ -75,8 +76,14 @@ function($, _, Backbone, ContractViews){
 			workflow.advanceState('next');
 		};
 
+		workflow.currentForm.on('incomplete', function(){
+			//do some popup error
+			//workflow.wizard.
+			workflow.getCurrentState(); //noop
+		});
+
 		var submitSucceeded = function(data){
-				workflow.serverResponse.reset(data);
+				workflow.setResponse(data);
 				this.trigger('complete');
 			},
 			submitFailed = function(){
@@ -85,15 +92,14 @@ function($, _, Backbone, ContractViews){
 			onFormComplete = function(){
 				workflow.currentForm.off('complete', onFormComplete);
 				// optionally extract data out of form
-				console.log(workflow.currentForm.model.toJSON());
+				console.log(JSON.stringify(workflow.currentForm.model.toJSON()));
 				workflow.currentForm.commit();
-				console.log(workflow.currentForm.model.toJSON());
+				console.log(JSON.stringify(workflow.currentForm.model.toJSON()));
 				var formData = workflow.currentForm.model.toJSON();
 
 				// save step data to wizard
 				workflow.wizardData.set(formData);
-				// console.log(JSON.stringify(workflow.wizardData.toJSON()));
-				workflow.unsetForm();
+				// console.log(JSON.stringify(workflow.wizardData.toJSON()));				
 
 				callback();
 			};
@@ -111,47 +117,14 @@ function($, _, Backbone, ContractViews){
 			workflow.currentForm.send();
 		}
 	};
-	// temporary backup of next method
-	var next = function(){
-		var workflow = this;
-		// validates locally
-		if(_.isEmpty(workflow.currentForm.validate())){
-
-			workflow.currentForm.on('complete', function(){
-				// optionally extract data out of form
-				workflow.currentForm.commit();
-				var formData = workflow.currentForm.model.toJSON();
-
-				// save step data to wizard
-				workflow.wizardData.set(formData);
-
-				// workflow.currentForm.trigger("complete");
-				workflow.next();
-			});
-
-			// trigger server validation/submission
-			workflow.currentForm.succeeded = function(data){
-				workflow.serverResponse.reset(data)/*.clear()*/;
-				//workflow.serverResponse.set(data);
-
-				this.trigger('complete');
-			};
-
-			workflow.currentForm.failed = function(){
-				this.trigger('incomplete');
-			};
-
-			workflow.currentForm.send();
-		}
-	};
 
 	WorkflowManager.prototype.setButtons = function(state){
 		this.wrapper.setButtonState(state);
 	};
 
 	// Accessors/Helpers for handling the states DS
-	WorkflowManager.prototype.setStates = function(steps){
-		this.steps = _.extend(this.steps || {}, steps);
+	WorkflowManager.prototype.setStates = function(states){
+		this.states = _.extend(this.states || {}, states);
 	};
 	WorkflowManager.prototype.getState = function(stateId){
 		if(!this.states || !this.states[stateId])
@@ -180,14 +153,35 @@ function($, _, Backbone, ContractViews){
 	WorkflowManager.prototype.advanceState = function(direction){
 		if(direction !== 'next' && direction != 'prev')
 			direction = 'next';
+		this.unsetForm();
 		this.triggerState(this.getCurrentState()[direction]);
+	};
+	WorkflowManager.prototype.setResponse = function(data){
+		var currentState = this.getCurrentState();
+		if(!currentState.response)
+			currentState.response = new Backbone.Model();
+		currentState.response.set(data);
+	};
+	WorkflowManager.prototype.getResponse = function(stateOrDirection){
+		var state = this.getState(stateOrDirection),
+			direction = stateOrDirection;
+
+		if(!state){
+			var currentState = this.getCurrentState();
+			if(direction == 'prev' || direction == 'next'){
+				state = this.getState(currentState[direction]) || {};
+			} else {
+				if(currentState.prev)
+					state = this.getState(currentState.prev) || {};
+				else
+					state = currentState;
+			}
+		}
+		return (state.response)? state.response.toJSON(): {};
 	};
 
 	// Backbone.View related helpers
 	WorkflowManager.prototype.setForm = function(form){
-		var data = this.serverResponse.toJSON() || {};
-		// form.model.set(data);
-		if(form.setExtras) form.setExtras({preFetch: data});
 		this.wrapper.swapChild(form);
 		this.currentForm = form;
 		return form;

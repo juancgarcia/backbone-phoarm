@@ -57,6 +57,8 @@ function(_, Backbone, templateHtml){
 			this.childView = this.showView(view);
 		},
 		showView: function(view){
+			if(!this.$(this.containerSelector).length)
+				this.$el.prepend($('<div class="'+this.containerSelector.slice(1)+'"></div>'));
 			if(view && view instanceof Backbone.View)
 				view.setElement(this.$(this.containerSelector)).render();
 			return view;

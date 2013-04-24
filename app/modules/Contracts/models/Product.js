@@ -14,14 +14,17 @@ function(_, Backbone, ProductsJSON){
 	var ProductCategory = Backbone.Model.extend({
 		defaults: {
 			_id: 0,
-			name: ''
+			name: 'unCategory'
+		},
+		toString: function(){
+			return this.get('name');
 		}
 	});
 
 	var Product = Backbone.Model.extend({
-		// idAttribute: "_id",
 		initialize: function(){
-			// this.set('group', new ProductCategory());
+			if(this.get('group') && !(this.get('group') instanceof ProductCategory))
+				this.set('group', new ProductCategory(this.get('group')));
 		},
 		defaults: {
 			id: 0,
@@ -33,7 +36,7 @@ function(_, Backbone, ProductsJSON){
 			return attrs;
 		},
 		toString: function(){
-			return this.get('group').get('name')+ ' - ' +this.get('name');
+			return this.get('group').toString()+ ' - ' +this.get('name');
 		}
 	});
 
@@ -43,10 +46,14 @@ function(_, Backbone, ProductsJSON){
 	});
 
 	var ProductsSelection = Backbone.Model.extend({
+		initialize: function(config){
+			this.schema.product.options = config.getOptions || this.getOptions;
+		},
+		getOptions: function(){}, //placeholder
 		schema:{
 			product: {
 				type: /*'Radio'*/ 'Select',
-				options: new Products()
+				options: []
 			}
 		}
 	});

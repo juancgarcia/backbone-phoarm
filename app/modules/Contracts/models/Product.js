@@ -23,7 +23,7 @@ function(_, Backbone, ProductsJSON){
 
 	var Product = Backbone.Model.extend({
 		initialize: function(){
-			if(this.get('group') && !(this.get('group') instanceof ProductCategory))
+			if(!(this.get('group') instanceof ProductCategory))
 				this.set('group', new ProductCategory(this.get('group')));
 		},
 		defaults: {

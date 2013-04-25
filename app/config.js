@@ -7,7 +7,9 @@ require.config({
 		'backbone.localStorage': 'vendor/backbone.localStorage',
 		'backbone.subroute':'vendor/backbone.subroute-0.3.2',
 		'backbone.forms':'vendor/backbone-forms',
-		'text': 'vendor/requirejs.text-2.0.5'
+		'text': 'vendor/requirejs.text-2.0.5',
+		'jquery.ui': 'vendor/jquery-ui',
+		'moment': 'vendor/moment.min'
 		// //cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.1.1/bootstrap.min.js
 	},
 	shim: {

@@ -1,21 +1,64 @@
 body {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
+	font-family: Tahoma
 }
 
 /*clearfix*/
 .group:before,
 .group:after {
-  content: "";
-  display: table;
+	content: "";
+	display: table;
 }
 .group:after {
-  clear: both;
+	clear: both;
 }
 .group {
-  zoom: 1; /* IE6&7 */
+	zoom: 1; /* IE6&7 */
 }
 
-ul.nav li {
+.nav li {
 	display: inline;
+}
+
+h3 {
+	/*font-family: Tahoma;*/
+	font-size: 14px;
+	border: 2px solid #000;
+	color: #FFF;
+	background-color: #5f5f5f;
+}
+
+.ContractWizardContainer {
+	padding: 10px;
+	overflow: hidden;
+	display: inline-block;
+}
+
+form[data-fieldsets] {
+	border-color: #000000;
+	float: left;
+	display: inline;
+}
+
+fieldset[data-fields] label {
+	width: 20%;
+	padding-right: 1em;
+	float: left;
+	text-align: right;
+}
+
+/*clearfix*/
+fieldset[data-fields] > div > div:before,
+fieldset[data-fields] > div > div:after {
+	content: "";
+	display: table;
+}
+fieldset[data-fields] > div > div:after {
+	clear: both;
+}
+fieldset[data-fields] > div > div {
+	zoom: 1; /* IE6&7 */
+	width: 70%;
+	/*float: left;*/
 }

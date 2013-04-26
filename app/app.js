@@ -5,16 +5,19 @@ define([
 
 	// Modules
 	'views/all',
-	'modules/Contracts'
+	'modules/Auth',
+	'modules/Contracts',
 
 	// Library extensions
+	'backbone.forms'
 ],
-function($, Backbone, AppViews, ContractsModule) {
+function($, Backbone, AppViews, AuthModule, ContractsModule) {
 
 	var Routers = {},
 		AppRouter = Backbone.Router.extend({
 		routes: {
 			'': 'home',
+			'login': 'login',
 			'list': 'list',
 			'about': 'about',
 			'contracts/*subroute': 'invokeContractsModule'
@@ -37,6 +40,12 @@ function($, Backbone, AppViews, ContractsModule) {
 					containerSelector: this.appSelector
 				});
 			}
+		},
+
+		login: function(){
+			this.swapView(new AuthModule.Views.Credentials({
+				model: new AuthModule.Models.Credentials.Model()
+			}));
 		},
 
 		home: function(){

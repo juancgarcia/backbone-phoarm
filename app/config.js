@@ -32,6 +32,7 @@ require.config({
 		}
 	},
 	'packages': [
-		'modules/Contracts'
+		'modules/Contracts',
+		'modules/Auth'
 	]
 });

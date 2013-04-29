@@ -4,6 +4,7 @@ define([
 	'backbone',
 
 	// Modules
+	'AppState',
 	'views/all',
 	'modules/Auth',
 	'modules/Contracts',
@@ -11,7 +12,7 @@ define([
 	// Library extensions
 	'backbone.forms'
 ],
-function($, Backbone, AppViews, AuthModule, ContractsModule) {
+function($, Backbone, AppState, AppViews, AuthModule, ContractsModule) {
 
 	var Routers = {},
 		AppRouter = Backbone.Router.extend({
@@ -24,6 +25,7 @@ function($, Backbone, AppViews, AuthModule, ContractsModule) {
 		},
 
 		initialize: function(){
+			AppState.trigger('initialize');
 			this.appSelector = '.appContainer';
 			new AppViews.Header().setElement($('.header')).render();
 		},

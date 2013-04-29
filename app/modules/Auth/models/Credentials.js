@@ -2,19 +2,19 @@ define([
 	// Libraries
 	'jquery',
 	'underscore',
-	'backbone'
+	'backbone',
 
 	// Modules
+	'../State',
+	'json!rpc.json'
 
 	// Library extensions
 ],
-function($, _, Backbone){
+function($, _, Backbone, AuthState, RPC){
 
 	var Credential = Backbone.Model.extend({
+		// url: RPC.auth.url,
 		initialize: function(){
-			// this.on('all', function(eventName){
-			// 	console.log('Credential Model event: '+eventName);
-			// });
 		},
 		schema: {
 			username: {type: 'Text', validators: ['required']},
@@ -23,8 +23,15 @@ function($, _, Backbone){
 		defaults: {
 			username: '',
 			password: ''
+		},
+		reset: function(){
+			this.set(this.defaults);
+		},
+		verify: function(){
+			return AuthState.authenticate(this);
 		}
 	});
+
 	var Credentials = Backbone.Collection.extend({
 		defaults: {
 			model: Credential

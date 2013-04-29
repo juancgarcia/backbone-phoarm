@@ -1,3 +1,8 @@
+# App Private #
+###############
+credentials.json
+rpc.json
+
 # Compiled source #
 ###################
 *.com

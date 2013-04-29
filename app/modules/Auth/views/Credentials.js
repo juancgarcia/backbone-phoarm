@@ -16,18 +16,9 @@ function($, _, Backbone, templateHtml){
 
 		initialize: function(options){
 			var theView = this;
-
 			// this.on('all', function(eventName){
-			// 	console.log('Credential Form event: '+eventName);
+			// console.log('Credential Form event: '+eventName);
 			// });
-
-			// this.model.on('change:_id', function(){
-			// 	this.model.fetch({
-			// 		success: function(){
-			// 			theView.render().trigger('show');
-			// 		}
-			// 	});
-			// }, this);
 			Backbone.Form.prototype.initialize.call(this, options);
 		},
 
@@ -43,16 +34,15 @@ function($, _, Backbone, templateHtml){
 		initialize: function(options){
 			var view = this;
 			_.extend(view, options);
-
 			view.model = view.model || new Backbone.Model();
-
 			this.form = new CredentialsForm({
 				model: view.model
 			});
 		},
 
 		events: {
-			'click .login': 'tryLogin'
+			'click .login': 'tryLogin',
+			'click .cancel': 'tryCancel'
 		},
 
 		tryLogin: function(){
@@ -64,7 +54,10 @@ function($, _, Backbone, templateHtml){
 				console.log('invalid form fields');
 		},
 
-		tryCancel: function(){},
+		tryCancel: function(){
+			this.model.reset();
+			this.form.setValue(this.model.toJSON());
+		},
 
 		template: _.template(templateHtml),
 

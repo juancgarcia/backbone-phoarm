@@ -1,0 +1,17 @@
+{
+	"auth": {
+		"url": "http://enter.URL/here",
+		"params": [
+			{
+				"name": "username",
+				"paramName": "User_ID",
+				"description": "username <String>, required"
+			},
+			{
+				"name": "password",
+				"paramName": "Pass_Word",
+				"description": "password <String>, required"
+			}
+		] 
+	}
+}

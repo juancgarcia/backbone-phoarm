@@ -7,7 +7,8 @@ define([
 	// Modules
 	'text!../tpl/Credentials.html',
 
-	// Library extensions
+	// Library extensions,
+	'jquery.lightbox_me',
 	'backbone.forms'
 ],
 function($, _, Backbone, templateHtml){
@@ -42,7 +43,8 @@ function($, _, Backbone, templateHtml){
 
 		events: {
 			'click .login': 'tryLogin',
-			'click .cancel': 'tryCancel'
+			'click .cancel': 'tryCancel',
+			'click .close': 'hide'
 		},
 
 		tryLogin: function(){
@@ -57,6 +59,10 @@ function($, _, Backbone, templateHtml){
 		tryCancel: function(){
 			this.model.reset();
 			this.form.setValue(this.model.toJSON());
+		},
+
+		hide: function(){
+			this.$el.hide();
 		},
 
 		template: _.template(templateHtml),

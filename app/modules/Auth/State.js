@@ -73,17 +73,16 @@ function($, _, Backbone, AppState, RPC){
 				dataType:'jsonp',
 				data: mapModelToRpc(credentials),
 				success: function(data){
-					if(data && _.isArray(data)){
-						_.each(data, function(authResponse){
-							AuthSingleton.set('authResponse', authResponse);
-						});
+					if(data && !_.contains(_.keys(data), 'error')){
+						AuthSingleton.set('authResponse', data);
+						AuthSingleton.trigger('authSucceeded');
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown){
 					AuthSingleton.trigger('authFailed');
 				},
 				complete: function(jqXHR, textStatus){
-					AuthSingleton.trigger('authTerminated');
+					AuthSingleton.trigger('authSequenceFinished');
 				}
 			});
 			// this.get('username');

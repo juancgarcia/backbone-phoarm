@@ -4,6 +4,7 @@ require.config({
 		// UI
 		jquery: 'vendor/jquery-1.9.1',
 		'jquery.ui': 'vendor/jquery-ui',
+		'jquery.lightbox_me': 'vendor/jquery.lightbox_me',
 		'moment': 'vendor/moment.min',
 
 		// Utility
@@ -22,6 +23,12 @@ require.config({
 	shim: {
 		underscore: {
 			exports: "_"
+		},
+		"jquery.ui": {
+			deps: ['jquery']
+		},
+		"jquery.lightbox_me": {
+			deps: ['jquery']
 		},
 		backbone: {
 			deps: ['underscore', 'jquery'],

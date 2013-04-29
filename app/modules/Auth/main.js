@@ -12,6 +12,8 @@ define([
 ],
 function($, _, Backbone, AuthModels, AuthViews){
 
+	$.ajaxSetup({jsonp: 'jsonp'});
+
 	var AuthModule = {};
 	AuthModule.Models = AuthModels;
 	AuthModule.Views = AuthViews;

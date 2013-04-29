@@ -28,10 +28,27 @@ function($, Backbone, AppState, AppViews, AuthModule, ContractsModule) {
 			AppState.trigger('initialize');
 			this.appSelector = '.appContainer';
 			new AppViews.Header().setElement($('.header')).render();
+			this.loginView = new AuthModule.Views.Credentials({
+				model: new AuthModule.Models.Credentials.Model()
+			});
+			this.loginView.render().$el.hide().appendTo($('body'));
+
+			AppState.on('login', function(){
+				this.loginView.$el.show();
+
+				this.loginView.$el.lightbox_me({
+					centered: true,
+					onLoad: function() {
+						// $('#sign_up').find('input:first').focus()
+						}
+					});
+
+			}, this);
 		},
 
-		swapView: function(view, test){
+		swapView: function(view){
 			if(this.currentView) this.currentView.off();
+			if(!view){ this.loginView.$el.hide(); return;}
 			this.currentView = view.setElement($(this.appSelector)).render();
 		},
 
@@ -45,9 +62,12 @@ function($, Backbone, AppState, AppViews, AuthModule, ContractsModule) {
 		},
 
 		login: function(){
-			this.swapView(new AuthModule.Views.Credentials({
-				model: new AuthModule.Models.Credentials.Model()
-			}));
+			// this.swapView(new AuthModule.Views.Credentials({
+			// 	model: new AuthModule.Models.Credentials.Model()
+			// }));
+
+			this.swapView(null);
+			this.loginView.$el.show();
 		},
 
 		home: function(){

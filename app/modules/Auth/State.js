@@ -35,26 +35,30 @@ function($, _, Backbone, RPC){
 		isAuthorized: function(){
 			return !_.contains(_.keys(this.get('authResponse') || {}), 'error');
 		},
-		authenticate: function(credentials){
-			AuthSingleton = this;
-			$.ajax({
+		rpcDone: function(data, jqXHR, textStatus){
+			this.set('authResponse', data);
+			if(data && !_.contains(_.keys(data), 'error'))
+				this.trigger('authSucceeded');
+			else
+				this.trigger('authFailed');
+		},
+		rpcFail: function(jqXHR, textStatus, errorThrown){
+			this.trigger('authFailed');
+		},
+		rpcAlways: function(jqXHR, textStatus){
+			this.trigger('authSequenceFinished');
+		},
+		authenticate: function(){
+			request = $.ajax({
+				context: this,
 				url: RPC.auth.url,
 				type:'GET',
 				dataType:'jsonp',
-				data: mapModelToRpc(credentials),
-				success: function(data){
-					if(data && !_.contains(_.keys(data), 'error')){
-						AuthSingleton.set('authResponse', data);
-						AuthSingleton.trigger('authSucceeded');
-					}
-				},
-				error: function(jqXHR, textStatus, errorThrown){
-					AuthSingleton.trigger('authFailed');
-				},
-				complete: function(jqXHR, textStatus){
-					AuthSingleton.trigger('authSequenceFinished');
-				}
+				data: mapModelToRpc(this.get('credentials'))
 			});
+			request.done(this.rpcDone);
+			request.fail(this.rpcFail);
+			request.always(this.rpcAlways);
 		},
 		initialize: function(){
 			this.on("all", this.defaultEvent);
@@ -62,6 +66,7 @@ function($, _, Backbone, RPC){
 			this.on("authError", this.authError);
 			this.on('authentication_request'); //override to show login
 			this.on('deauthentication_request', this.deauthenticate, this);
+			this.on('authenticate', this.authenticate, this);
 			// this.on("logout", this.logout);
 			// this.on('login', this.login);
 			this.on('authSucceeded', this.authSucceeded);

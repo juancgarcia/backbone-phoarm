@@ -6,12 +6,13 @@ define([
 
 	// Modules
 	'text!../tpl/Credentials.html',
+	'../State',
 
 	// Library extensions,
 	'jquery.lightbox_me',
 	'backbone.forms'
 ],
-function($, _, Backbone, templateHtml){
+function($, _, Backbone, templateHtml, AuthState){
 
 	var CredentialsForm = Backbone.Form.extend({
 

@@ -28,7 +28,8 @@ function($, _, Backbone, AuthState, RPC){
 			this.set(this.defaults);
 		},
 		verify: function(){
-			return AuthState.authenticate(this);
+			AuthState.set('credentials', this);
+			AuthState.trigger('authenticate');
 		}
 	});
 

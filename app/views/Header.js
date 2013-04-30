@@ -5,28 +5,53 @@ define([
 	'backbone',
 
 	// Modules
-	'AppState',
+	// 'AppState',
+	'modules/Auth',
 	'text!../tpl/Header.html'
 
 	// Library extensions
 ],
-function($, _, Backbone, AppState, templateHtml){
+function($, _, Backbone, AuthModule, /*AppState,*/ templateHtml){
 
 	var HeaderView = Backbone.View.extend({
 
 		template: _.template(templateHtml),
 
-		render: function(){
-			this.$el.html(this.template());
-			return this;
+		initialize: function(){
+			AuthModule.on('logout', this.renderLoginLink, this);
+			AuthModule.on('login', this.renderLogoutLink, this);
 		},
 
 		events: {
-			"click.login":"login"
+			"click .logLink":"logClick"
 		},
 
-		login: function(){
-			AppState.trigger('login');
+		logClick: function(){
+			if(AuthModule.isAuthorized())
+				AuthModule.trigger('deauthentication_request');
+			else
+				AuthModule.trigger('authentication_request');
+		},
+
+		render: function(){
+			this.$el.html(this.template());
+			this.renderLogLink();
+			return this;
+		},
+
+		renderLogLink: function(){
+			if(AuthModule.isAuthorized())
+				this.renderLogoutLink();
+			else
+				this.renderLoginLink();
+		},
+
+		renderLogoutLink: function(){
+			this.$('.logLink').html('Logout');
+		},
+
+		renderLoginLink: function(){
+			this.$('.logLink').html('Login');
 		},
 
 		selectMenuItem: function (menuItem) {

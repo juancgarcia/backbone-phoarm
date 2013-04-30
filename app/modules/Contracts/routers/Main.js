@@ -60,7 +60,7 @@ function($, Backbone, ContractModels, ContractViews, Workflows){
 			});
 
 			console.log('new contract wizard');
-		},
+		}/*,
 
 		list: function(page){
 			var contractList = new ContractModels.Contract.Collection();
@@ -84,7 +84,7 @@ function($, Backbone, ContractModels, ContractViews, Workflows){
 			var contract = new ContractModels.Contract.Model();
 			this.swapView(new ContractViews.Detail({ model: contract }));
 			contract.set({_id: parseInt(id, 10)});
-		}
+		}*/
 	});
 
 	return ContractRouter;

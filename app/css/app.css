@@ -62,3 +62,7 @@ fieldset[data-fields] > div > div {
 	width: 70%;
 	/*float: left;*/
 }
+
+.credentials {
+    background: #fff;
+}

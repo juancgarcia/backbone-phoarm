@@ -5,12 +5,11 @@ define([
 	'backbone',
 
 	// Modules
-	'AppState',
 	'json!rpc.json'
 
 	// Library extensions
 ],
-function($, _, Backbone, AppState, RPC){
+function($, _, Backbone, RPC){
 
 	var AuthLog = function(msg){
 		console.log('[AUTHSTATE]:'+msg);
@@ -31,45 +30,16 @@ function($, _, Backbone, AppState, RPC){
 	var AuthState = Backbone.Model.extend({
 		defaults: {
 			authKey: null,
-			authResponse: null
-		},
-		initialize: function(){
-			this.on("all", this.defaultEvent);
-			this.on("change:authResponse", this.authUpdated);
-			this.on("authError", this.authError);
-			this.on("logout", this.logout);
-			AppState.on('login', this.login, this);
-		},
-		defaultEvent: function(eventName){
-			AuthLog(eventName);
-		},
-		keepAlive: function(){
-			// setTimeout
+			authResponse: {error: true}
 		},
 		isAuthorized: function(){
-
-		},
-		login: function(){
-			// show login screen
-			AuthLog('authentication_required');
-		},
-		logout: function(){
-			AppState.trigger('logout');
-		},
-		authError: function(){
-			this.logout();
-		},
-		authUpdated: function(model, value, options){
-			if(value.error){
-				model.trigger('authError');
-			}
+			return !_.contains(_.keys(this.get('authResponse') || {}), 'error');
 		},
 		authenticate: function(credentials){
 			AuthSingleton = this;
 			$.ajax({
 				url: RPC.auth.url,
 				type:'GET',
-				// dataType:'json',
 				dataType:'jsonp',
 				data: mapModelToRpc(credentials),
 				success: function(data){
@@ -85,7 +55,35 @@ function($, _, Backbone, AppState, RPC){
 					AuthSingleton.trigger('authSequenceFinished');
 				}
 			});
-			// this.get('username');
+		},
+		initialize: function(){
+			this.on("all", this.defaultEvent);
+			this.on("change:authResponse", this.authUpdated);
+			this.on("authError", this.authError);
+			this.on('authentication_request'); //override to show login
+			this.on('deauthentication_request', this.deauthenticate, this);
+			// this.on("logout", this.logout);
+			// this.on('login', this.login);
+			this.on('authSucceeded', this.authSucceeded);
+		},
+		defaultEvent: function(eventName){ AuthLog(eventName); },
+		keepAlive: function(){ /*setTimeout*/ },
+		deauthenticate: function(){
+
+			// clean up user state if necessary
+			this.set('authResponse', _.clone(this.defaults.authResponse));
+			this.trigger('logout');
+		},
+		authError: function(){
+			this.deauthenticate();
+		},
+		authUpdated: function(model, value, options){
+			if(value.error){
+				model.trigger('authError');
+			}
+		},
+		authSucceeded: function(){
+			this.trigger('login');
 		}
 	});
 

@@ -17,9 +17,10 @@ function($, _, Backbone, templateHtml){
 
 		initialize: function(options){
 			var theView = this;
-			// this.on('all', function(eventName){
-			// console.log('Credential Form event: '+eventName);
-			// });
+			this.on('reset', function(){
+				this.model.reset();
+				this.setValue(this.model.toJSON());
+			}, this);
 			Backbone.Form.prototype.initialize.call(this, options);
 		},
 
@@ -32,6 +33,7 @@ function($, _, Backbone, templateHtml){
 
 	}),
 	CredentialsView = Backbone.View.extend({
+		className: "credentials",
 		initialize: function(options){
 			var view = this;
 			_.extend(view, options);
@@ -39,15 +41,18 @@ function($, _, Backbone, templateHtml){
 			this.form = new CredentialsForm({
 				model: view.model
 			});
+			this.on('reset', function(){
+				this.form.trigger('reset');
+			});
 		},
 
 		events: {
-			'click .login': 'tryLogin',
-			'click .cancel': 'tryCancel',
-			'click .close': 'hide'
+			'click .login': 'clickLogin',
+			'click .cancel': 'clickCancel',
+			'click .close': 'close'
 		},
 
-		tryLogin: function(){
+		clickLogin: function(){
 			var errors = this.form.validate();
 			if(_.isEmpty(errors)){
 				this.form.commit();
@@ -56,13 +61,14 @@ function($, _, Backbone, templateHtml){
 				console.log('invalid form fields');
 		},
 
-		tryCancel: function(){
+		clickCancel: function(){
 			this.model.reset();
 			this.form.setValue(this.model.toJSON());
+			this.close();
 		},
 
-		hide: function(){
-			this.$el.hide();
+		close: function(){
+			this.$el.trigger('close');
 		},
 
 		template: _.template(templateHtml),

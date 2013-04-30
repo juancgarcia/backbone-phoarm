@@ -40,13 +40,13 @@ function($, _, Backbone, RPC){
 			if(data && !_.contains(_.keys(data), 'error'))
 				this.trigger('authSucceeded');
 			else
-				this.trigger('authFailed');
+				this.rpcFail();
 		},
 		rpcFail: function(jqXHR, textStatus, errorThrown){
-			this.trigger('authFailed');
+			// this.trigger('authFailed');
 		},
 		rpcAlways: function(jqXHR, textStatus){
-			this.trigger('authSequenceFinished');
+			// this.trigger('authSequenceFinished');
 		},
 		authenticate: function(){
 			request = $.ajax({
@@ -76,7 +76,8 @@ function($, _, Backbone, RPC){
 		deauthenticate: function(){
 
 			// clean up user state if necessary
-			this.set('authResponse', _.clone(this.defaults.authResponse));
+			if(!_.contains(_.keys(this.get('authResponse')), 'error'))
+				this.set('authResponse', _.clone(this.defaults.authResponse));
 			this.trigger('logout');
 		},
 		authError: function(){

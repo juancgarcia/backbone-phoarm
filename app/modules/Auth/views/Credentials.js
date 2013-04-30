@@ -42,9 +42,17 @@ function($, _, Backbone, templateHtml, AuthState){
 			this.form = new CredentialsForm({
 				model: view.model
 			});
-			this.on('reset', function(){
-				this.form.trigger('reset');
-			});
+			this.on('reset', this.reset, this);
+			AuthState.on('authError', this.showErrors, this);
+		},
+
+		reset: function(){
+			this.form.trigger('reset');
+			this.$('.errors').hide().html('');
+		},
+
+		showErrors: function(){
+			this.$('.errors').html(AuthState.get('authResponse').error).show();
 		},
 
 		events: {

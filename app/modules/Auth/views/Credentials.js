@@ -52,7 +52,7 @@ function($, _, Backbone, templateHtml, AuthState){
 		},
 
 		showErrors: function(){
-			this.$('.errors').html(AuthState.get('authResponse').error).show();
+			this.$('.errors').html(AuthState.get('authResponse').get('error')).show();
 		},
 
 		events: {

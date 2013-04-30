@@ -30,23 +30,32 @@ function($, _, Backbone, RPC){
 	var AuthState = Backbone.Model.extend({
 		defaults: {
 			authKey: null,
-			authResponse: {error: true}
+			authResponse: new Backbone.Model({error: true})
+		},
+		assertPermission: function(permission, callback){
+			var requested = new Backbone.Model(permission);
+
+			if( this.isAuthorized() &&
+				this.permissionMatch(requested, this.get('permission')) )
+				callback();
+			else {
+				this.set('requestedPermission', requested);
+				this.once('authSucceeded', function(){
+					if(this.permissionMatch(requested, this.get('permision')))
+						callback();
+					else {
+						AuthLog('Need to suspend closing of login window');
+						AuthLog('Need to set permission error');
+					}
+				});
+				this.trigger('authentication_request');
+			}
+		},
+		permissionMatch: function(request, current){
+			return false;
 		},
 		isAuthorized: function(){
-			return !_.contains(_.keys(this.get('authResponse') || {}), 'error');
-		},
-		rpcDone: function(data, jqXHR, textStatus){
-			this.set('authResponse', data);
-			if(data && !_.contains(_.keys(data), 'error'))
-				this.trigger('authSucceeded');
-			else
-				this.rpcFail();
-		},
-		rpcFail: function(jqXHR, textStatus, errorThrown){
-			// this.trigger('authFailed');
-		},
-		rpcAlways: function(jqXHR, textStatus){
-			// this.trigger('authSequenceFinished');
+			return !_.contains(this.get('authResponse').keys(), 'error');
 		},
 		authenticate: function(){
 			request = $.ajax({
@@ -60,36 +69,40 @@ function($, _, Backbone, RPC){
 			request.fail(this.rpcFail);
 			request.always(this.rpcAlways);
 		},
-		initialize: function(){
-			this.on("all", this.defaultEvent);
-			this.on("change:authResponse", this.authUpdated);
-			this.on("authError", this.authError);
-			this.on('authentication_request'); //override to show login
-			this.on('deauthentication_request', this.deauthenticate, this);
-			this.on('authenticate', this.authenticate, this);
-			// this.on("logout", this.logout);
-			// this.on('login', this.login);
-			this.on('authSucceeded', this.authSucceeded);
-		},
 		defaultEvent: function(eventName){ AuthLog(eventName); },
-		keepAlive: function(){ /*setTimeout*/ },
 		deauthenticate: function(){
 
 			// clean up user state if necessary
-			if(!_.contains(_.keys(this.get('authResponse')), 'error'))
-				this.set('authResponse', _.clone(this.defaults.authResponse));
+			if(this.isAuthorized())
+				this.set('authResponse', new Backbone.Model(_.clone(this.defaults.authResponse)));
 			this.trigger('logout');
 		},
-		authError: function(){
-			this.deauthenticate();
+		initialize: function(){
+			this
+				.on("all", this.defaultEvent)
+				.on("change:authResponse", function(model, value, options){
+					if(value.get('error')) model.trigger('authError');
+				}, this)
+				.on("authError", this.deauthenticate, this)
+				.on('authentication_request') //override to show login
+				.on('deauthentication_request', this.deauthenticate, this)
+				.on('authenticate', this.authenticate, this)
+				.on('authSucceeded', function(){
+					this.trigger('login');
+				});
 		},
-		authUpdated: function(model, value, options){
-			if(value.error){
-				model.trigger('authError');
-			}
+		rpcDone: function(data, jqXHR, textStatus){
+			this.set('authResponse', new Backbone.Model(data));
+			if(data && this.isAuthorized())
+				this.trigger('authSucceeded');
+			else
+				this.rpcFail();
 		},
-		authSucceeded: function(){
-			this.trigger('login');
+		rpcFail: function(jqXHR, textStatus, errorThrown){
+			// this.trigger('authFailed');
+		},
+		rpcAlways: function(jqXHR, textStatus){
+			// this.trigger('authSequenceFinished');
 		}
 	});
 

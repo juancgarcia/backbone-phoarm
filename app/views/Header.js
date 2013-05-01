@@ -11,7 +11,7 @@ define([
 
 	// Library extensions
 ],
-function($, _, Backbone, AuthModule, /*AppState,*/ templateHtml){
+function($, _, Backbone, AuthModule, templateHtml){
 
 	var HeaderView = Backbone.View.extend({
 
@@ -47,7 +47,7 @@ function($, _, Backbone, AuthModule, /*AppState,*/ templateHtml){
 		},
 
 		renderLogoutLink: function(){
-			this.$('.logLink').html('Logout');
+			this.$('.logLink').html('Logout ('+AuthModule.get('authResponse').get('usrDesc')+')');
 		},
 
 		renderLoginLink: function(){

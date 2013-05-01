@@ -38,7 +38,7 @@ function($, _, Backbone, AuthModels, AuthViews, AuthState){
 
 		}, AuthModule)
 		.on('login', function(){
-			AuthModule.loginView.close();
+			AuthModule.loginView.trigger('close');
 		}, AuthModule);
 
 	return AuthModule;

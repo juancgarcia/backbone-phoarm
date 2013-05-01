@@ -43,6 +43,7 @@ function($, _, Backbone, templateHtml, AuthState){
 				model: view.model
 			});
 			this.on('reset', this.reset, this);
+			this.on('close', this.clickCancel, this);
 			AuthState.on('authError', this.showErrors, this);
 		},
 
@@ -57,8 +58,8 @@ function($, _, Backbone, templateHtml, AuthState){
 
 		events: {
 			'click .login': 'clickLogin',
-			'click .cancel': 'clickCancel',
-			'click .close': 'close'
+			'click .cancel': 'clickCancel'//,
+			// 'click .close': 'close'
 		},
 
 		clickLogin: function(){
@@ -73,12 +74,12 @@ function($, _, Backbone, templateHtml, AuthState){
 		clickCancel: function(){
 			this.model.reset();
 			this.form.setValue(this.model.toJSON());
-			this.close();
+			this.$el.trigger('close');
+			AuthState.trigger('authentication_cancel');
 		},
 
-		close: function(){
-			this.$el.trigger('close');
-		},
+		// close: function(){
+		// },
 
 		template: _.template(templateHtml),
 

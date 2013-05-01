@@ -7,24 +7,37 @@ define([
 	'../models/all',
 	'../views/all',
 	'../workflows/all',
+	'modules/Auth',
 
 	// Library extensions
 	'backbone.subroute'
 ],
-function($, Backbone, ContractModels, ContractViews, Workflows){
+function($, Backbone, ContractModels, ContractViews, Workflows, AuthModule){
 
 	var ContractRouter = Backbone.SubRoute.extend({
+		// changed to protected routes
 		routes: {
-			''			:'rootPage',
-			'search'	:'searchPage',
-			'wizard'	:'wizardPage',
-			'list'		:'list',
-			'details/:id'	:'detailsPage',
-			'*other'	:'rootPage'
+		// 	''			:'rootPage',
+		// 	'search'	:'searchPage',
+		// 	'wizard'	:'wizardPage', 
+		// 	'list'		:'list',
+		// 	'details/:id'	:'detailsPage',
+		// 	'*other'	:'rootPage'
 		},
 
 		initialize: function(options){
-			var that = this;
+			var that = this,
+				noPerm = {},
+				agentPerm = {"usrAgtC":"exists","usrAgtN":"exists"},
+				dealerPerm = {"usrDlrC": "exists", "usrDlrN":"exists"};
+
+			//Protected Routes
+			that.protect("", noPerm, this.rootPage);
+			that.protect("*other", noPerm, this.rootPage);
+			that.protect("wizard", dealerPerm, this.wizardPage);
+			that.protect("agentsOnly", agentPerm, this.rootPage);
+
+
 			that.containerSelector = options.containerSelector || '.contractModuleContainer';
 			that.moduleMainSelector = options.moduleMainSelector || '.moduleContractMain';
 			that.parentView = options.parentView || undefined;
@@ -32,6 +45,14 @@ function($, Backbone, ContractModels, ContractViews, Workflows){
 			that.moduleMainView = new ContractViews.Master().render();
 
 			that.currentView = null;
+		},
+
+		protect: function(route, permission, method){
+			var router = this;
+			router.route(route, "rootPage", function(){
+				AuthModule.assertPermission(
+					permission, method, router);
+			});
 		},
 
 		swapView: function(view){

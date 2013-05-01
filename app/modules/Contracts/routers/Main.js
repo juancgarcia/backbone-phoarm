@@ -29,7 +29,7 @@ function($, Backbone, ContractModels, ContractViews, Workflows, AuthModule){
 			var that = this,
 				noPerm = {},
 				agentPerm = {"usrAgtC":"exists","usrAgtN":"exists"},
-				dealerPerm = {"usrDlrC": "exists", "usrDlrN":"exists"};
+				dealerPerm = agentPerm;
 
 			//Protected Routes
 			that.protect("", noPerm, this.rootPage);

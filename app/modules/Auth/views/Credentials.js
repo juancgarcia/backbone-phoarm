@@ -44,12 +44,32 @@ function($, _, Backbone, templateHtml, AuthState){
 			});
 			this.on('reset', this.reset, this);
 			this.on('close', this.clickCancel, this);
+			this.on('show', this.show, this);
 			AuthState.on('authError', this.showErrors, this);
+			AuthState.on('change:reason', this.showMessage, this);
 		},
 
 		reset: function(){
 			this.form.trigger('reset');
 			this.$('.errors').hide().html('');
+			// this.$('.message').hide().html('');
+		},
+
+		show: function(){
+			this.reset();
+			this.$el.show().lightbox_me({
+				centered: true,
+				onLoad: function() {
+					// $('#sign_up').find('input:first').focus()
+					}
+				});
+		},
+
+		showMessage: function(){
+			if(AuthState.has('reason'))
+				this.$('.message').html(AuthState.get('reason')).show();
+			else
+				this.$('.message').html('').hide();
 		},
 
 		showErrors: function(){

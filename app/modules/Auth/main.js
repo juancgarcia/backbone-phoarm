@@ -26,16 +26,7 @@ function($, _, Backbone, AuthModels, AuthViews, AuthState){
 
 	AuthState
 		.on( 'authentication_request', function(){
-			var login = AuthModule.loginView;
-			login.trigger('reset');
-			login.$el.show();
-			login.$el.lightbox_me({
-				centered: true,
-				onLoad: function() {
-					// $('#sign_up').find('input:first').focus()
-					}
-				});
-
+			AuthModule.loginView.trigger('show');
 		}, AuthModule)
 		.on('login', function(){
 			AuthModule.loginView.trigger('close');

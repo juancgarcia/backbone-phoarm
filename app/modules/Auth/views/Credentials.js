@@ -47,6 +47,9 @@ function($, _, Backbone, templateHtml, AuthState){
 			this.on('show', this.show, this);
 			AuthState.on('authError', this.showErrors, this);
 			AuthState.on('change:reason', this.showMessage, this);
+			this.form.on('enter', function(){
+				view.clickLogin();
+			});
 		},
 
 		reset: function(){

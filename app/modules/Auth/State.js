@@ -36,7 +36,8 @@ function($, _, Backbone, RPC){
 			authResponse: new Backbone.Model({error: true}),
 			permission: new Backbone.Model({}),
 			requestedPermission: new Backbone.Model({}),
-			requestedAction: new Backbone.Model({})
+			requestedAction: new Backbone.Model({}),
+			reason: ""
 		},
 
 		initialize: function(){
@@ -55,7 +56,7 @@ function($, _, Backbone, RPC){
 					if(this.permissionMatch(this.get('requestedPermission'), this.get('permission')))
 						this.trigger('login');
 					else{
-						this.get('authResponse').set('error', 'This action requires elevated permissions');
+						this.get('authResponse').set('error', 'This action requires an account with higher permissions');
 						this.trigger('authError');
 					}
 				});
@@ -69,6 +70,7 @@ function($, _, Backbone, RPC){
 			this.get('requestedAction').stopListening();
 			this.set('requestedAction', _.clone(this.defaults.requestedAction));
 			this.set('requestedPermission', _.clone(this.defaults.requestedPermission));
+			this.unset('reason');
 		},
 
 		/*
@@ -90,6 +92,10 @@ function($, _, Backbone, RPC){
 				this.permissionMatch(requestedPermission, this.get('permission')) )
 				complete.call(context);
 			else {
+				if(!this.isAuthorized())
+					this.set('reason', "Please Log In");
+				else
+					this.set('reason', "Elevated permissions requested");
 				this.set('requestedPermission', requestedPermission);
 				this.set('requestedAction', requestedAction);
 				requestedAction.listenTo(Auth, 'login', function(){

@@ -25,9 +25,13 @@ function($, Backbone, AppState, AppViews, AuthModule, ContractsModule) {
 		},
 
 		initialize: function(){
+			var router = this;
 			AppState.trigger('initialize');
 			this.appSelector = '.appContainer';
 			new AppViews.Header().setElement($('.header')).render();
+			AuthModule.on('logout', function(){
+				router.navigate("", {trigger: true});
+			});
 		},
 
 		swapView: function(view){

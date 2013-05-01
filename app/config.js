@@ -8,6 +8,7 @@ require.config({
 		'moment': 'vendor/moment.min',
 
 		// Utility
+		'console.log': 'vendor/consolelog.js',
 		underscore: 'vendor/underscore-1.4.4',// //cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js
 
 		// Frameworks

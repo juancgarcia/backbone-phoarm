@@ -11,7 +11,7 @@ define([
 
 	// Library extensions
 	'backbone.forms',
-	''
+	'console.log'
 ],
 function($, Backbone, AppState, AppViews, AuthModule, ContractsModule) {
 

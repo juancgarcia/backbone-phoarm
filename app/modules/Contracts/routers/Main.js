@@ -42,7 +42,20 @@ function($, Backbone, ContractModels, ContractViews, Workflows, AuthModule){
 			that.moduleMainSelector = options.moduleMainSelector || '.moduleContractMain';
 			that.parentView = options.parentView || undefined;
 
-			that.moduleMainView = new ContractViews.Master().render();
+			that.moduleMainView = new ContractViews.Master({
+				events: {
+					"click a": function(e){
+						var base = '#contracts/',
+							hash = e.target.hash;
+						if(hash.indexOf(base) === 0){
+							e.preventDefault();
+							var route = hash.slice(base.length);
+							that.navigate("");
+							that.navigate(route, {trigger: true});
+						}
+					}
+				}
+			}).render();
 
 			that.currentView = null;
 		},

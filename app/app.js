@@ -28,6 +28,17 @@ function($, Backbone, AppState, AppViews, ContractsModule) {
 			AppState.trigger('initialize');
 			this.appSelector = '.appContainer';
 			new AppViews.Header().setElement($('.header')).render();
+
+			$('.nav a').click(function(e){
+				var base = '#',
+					hash = e.target.hash;
+				if(hash.indexOf(base) === 0){
+					e.preventDefault();
+					var route = hash.slice(base.length);
+					router.navigate("");
+					router.navigate(route, {trigger: true});
+				}
+			});
 		},
 
 		swapView: function(view){

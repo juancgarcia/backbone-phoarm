@@ -1,14 +1,16 @@
 define([
 	// Libraries
+	'jquery',
 	'underscore',
 	'backbone',
 
 	// Modules
-	'text!../tpl/Wizard.html'
+	'text!../tpl/Wizard.html',
+	'modules/Auth'
 
 	// Library extensions
 ],
-function(_, Backbone, templateHtml){
+function($, _, Backbone, templateHtml, AuthModule){
 
 	var SearchView = Backbone.View.extend({
 
@@ -17,10 +19,13 @@ function(_, Backbone, templateHtml){
 		template: _.template(templateHtml),
 
 		events: {
-			"click button.prev": "prev",
-			"click button.next": "next",
-			"click button.reset": "reset",
-			"click button.submit": "submit"
+			"click button": "click"
+		},
+
+		click: function(event){
+			var method = $(event.target).attr("class");
+			if(_.isFunction(this[method]))
+				AuthModule.assertPermission({}, this[method], this);
 		},
 
 		prev: function(){

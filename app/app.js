@@ -6,14 +6,13 @@ define([
 	// Modules
 	'AppState',
 	'views/all',
-	'modules/Auth',
 	'modules/Contracts',
 
 	// Library extensions
 	'backbone.forms',
 	'console.log'
 ],
-function($, Backbone, AppState, AppViews, AuthModule, ContractsModule) {
+function($, Backbone, AppState, AppViews, ContractsModule) {
 
 	var Routers = {},
 		AppRouter = Backbone.Router.extend({
@@ -29,9 +28,6 @@ function($, Backbone, AppState, AppViews, AuthModule, ContractsModule) {
 			AppState.trigger('initialize');
 			this.appSelector = '.appContainer';
 			new AppViews.Header().setElement($('.header')).render();
-			AuthModule.on('logout', function(){
-				router.navigate("", {trigger: true});
-			});
 		},
 
 		swapView: function(view){
